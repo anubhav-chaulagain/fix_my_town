@@ -1,16 +1,3 @@
-# fix_my_town
+# FixMyTown
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+FixMyTown is a cross-platform mobile and web application designed to empower citizens to report, track, and resolve local civic issues efficiently. Users can submit reports about problems such as potholes, broken streetlights, waste management concerns, or water supply issues, attaching images, location data, and descriptions. Municipal authorities can review, prioritize, and update the status of reported issues in real-time, while citizens receive notifications about progress and resolution. By bridging the gap between the community and local authorities, FixMyTown promotes transparency, accountability, and faster resolution of urban problems, making towns smarter and more responsive to citizen needs.

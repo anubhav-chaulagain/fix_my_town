@@ -19,7 +19,7 @@ class OnboardingScreenThree extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Spacer(),
-            Image.asset("assets/images/problems.png"),
+            Image.asset("assets/images/reporting_process.png"),
             Text(
               "You can track progress:",
               textAlign: TextAlign.center,
@@ -29,26 +29,9 @@ class OnboardingScreenThree extends StatelessWidget {
                 decoration: TextDecoration.none,
               ),
             ),
+            SizedBox(height: 10),
             Text(
               "Submitted → Assigned → In Progress → Resolved",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-                decoration: TextDecoration.none,
-              ),
-            ),
-            Text(
-              "Authorities respond with updates and proof images",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-                decoration: TextDecoration.none,
-              ),
-            ),
-            Text(
-              "You can chat for clarifications",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,

@@ -20,8 +20,36 @@ class OnboardingScreenTwo extends StatelessWidget {
           children: [
             Spacer(),
             Image.asset("assets/images/report_issue.png"),
+            SizedBox(height: 20),
             Text(
-              "Smart Reporting with Photos & Location",
+              "How to report an issue",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+                decoration: TextDecoration.none,
+              ),
+            ),
+            Text(
+              "Take photos",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+                decoration: TextDecoration.none,
+              ),
+            ),
+            Text(
+              "Add details",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+                decoration: TextDecoration.none,
+              ),
+            ),
+            Text(
+              "Auto GPS tagging",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,

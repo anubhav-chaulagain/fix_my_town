@@ -2,25 +2,18 @@ import 'package:fix_my_town/widgets/my_button.dart';
 import 'package:fix_my_town/widgets/my_text_form_field_login.dart';
 import 'package:flutter/material.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
-  final TextEditingController nameController = TextEditingController(text: "");
-
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController(text: "");
   final TextEditingController passController = TextEditingController(text: "");
 
-  final TextEditingController conPassController = TextEditingController(
-    text: "",
-  );
-
-  final _signupKey = GlobalKey<FormState>();
-
+  final _loginKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,25 +26,19 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
         child: SafeArea(
-          child: SingleChildScrollView(
+          child: Center(
             child: Form(
-              key: _signupKey,
+              key: _loginKey,
               child: Column(
                 spacing: 20,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    "Sign Up",
+                    "Log In",
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 10),
-                  MyTextFormFieldLogin(
-                    controllerVal: nameController,
-                    text: "Enter full name",
-                    icon: Icons.person,
-                    label: "Full Name",
-                  ),
                   MyTextFormFieldLogin(
                     controllerVal: emailController,
                     text: "xyz@gmail.com",
@@ -65,16 +52,10 @@ class _SignupScreenState extends State<SignupScreen> {
                     icon: Icons.key,
                     label: "Password",
                   ),
-                  MyTextFormFieldLogin(
-                    controllerVal: conPassController,
-                    text: "Retype password",
-                    icon: Icons.password,
-                    label: "Confirm Password",
-                  ),
                   SizedBox(height: 10),
                   MyButton(
                     onPressed: () {},
-                    text: "Signup",
+                    text: "Login",
                     type: MyButtonType.elevated,
                   ),
                 ],

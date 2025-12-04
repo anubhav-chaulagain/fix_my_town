@@ -1,9 +1,9 @@
-import 'package:fix_my_town/screens/signup_screen.dart';
+import 'package:fix_my_town/screens/onboarding_screen_two.dart';
 import 'package:fix_my_town/widgets/my_button.dart';
 import 'package:flutter/material.dart';
 
-class OnboardingScreenThree extends StatelessWidget {
-  const OnboardingScreenThree({super.key});
+class OnboardingScreenOne extends StatelessWidget {
+  const OnboardingScreenOne({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,19 +20,9 @@ class OnboardingScreenThree extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Spacer(),
-            Image.asset("assets/images/reporting_process.png"),
+            Image.asset("assets/images/problems.png"),
             Text(
-              "You can track progress:",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-                decoration: TextDecoration.none,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              "Submitted → Assigned → In Progress → Resolved",
+              "Capture local problems and report them directly to your municipality.",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -45,7 +35,9 @@ class OnboardingScreenThree extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SignupScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => const OnboardingScreenTwo(),
+                  ),
                 );
               },
               text: "Next",

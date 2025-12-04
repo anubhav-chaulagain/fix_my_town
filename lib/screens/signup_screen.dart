@@ -1,3 +1,4 @@
+import 'package:fix_my_town/screens/login_screen.dart';
 import 'package:fix_my_town/widgets/my_button.dart';
 import 'package:fix_my_town/widgets/my_text_form_field_login.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,16 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   SizedBox(height: 10),
                   MyButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (_signupKey.currentState!.validate()) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
+                      }
+                    },
                     text: "Signup",
                     type: MyButtonType.elevated,
                   ),

@@ -1,3 +1,4 @@
+import 'package:fix_my_town/screens/onboarding_screen_three.dart';
 import 'package:fix_my_town/widgets/my_button.dart';
 import 'package:flutter/material.dart';
 
@@ -59,7 +60,14 @@ class OnboardingScreenTwo extends StatelessWidget {
             ),
             Spacer(),
             MyButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const OnboardingScreenThree(),
+                  ),
+                );
+              },
               text: "Next",
               type: MyButtonType.elevated,
             ),

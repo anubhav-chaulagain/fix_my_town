@@ -1,3 +1,4 @@
+import 'package:fix_my_town/screens/onboarding_screen_one.dart';
 import 'package:fix_my_town/widgets/my_button.dart';
 import 'package:flutter/material.dart';
 
@@ -50,12 +51,26 @@ class SplashScreen extends StatelessWidget {
                     spacing: 16,
                     children: [
                       MyButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const OnboardingScreenOne(),
+                            ),
+                          );
+                        },
                         text: "Get Started",
                         type: MyButtonType.outlined,
                       ),
                       MyButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const OnboardingScreenOne(),
+                            ),
+                          );
+                        },
                         text: "Login",
                         type: MyButtonType.elevated,
                       ),

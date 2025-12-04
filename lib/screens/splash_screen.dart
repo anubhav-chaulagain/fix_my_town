@@ -43,6 +43,7 @@ class SplashScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                Image.asset("assets/images/splash_screen_front.png"),
                 Padding(
                   padding: EdgeInsets.only(left: 40, right: 40),
                   child: Column(

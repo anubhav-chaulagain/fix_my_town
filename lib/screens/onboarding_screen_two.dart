@@ -7,71 +7,130 @@ class OnboardingScreenTwo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      decoration: BoxDecoration(
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+    final size = MediaQuery.of(context).size;
+    final bool isTablet = width >= 600;
+
+    // Responsive padding
+    final horizontalPadding = width * 0.05;
+    final verticalPadding = height * 0.05;
+
+    // Responsive font sizes
+    final headingFontSize = width * 0.05; // ~5% of width
+    final textFontSize = width * 0.045; // slightly smaller
+
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
         color: const Color(0xFFF1F1F1),
-        border: Border.all(color: Colors.grey),
-      ),
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
-      child: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Spacer(),
-            Image.asset("assets/images/report_issue.png"),
-            SizedBox(height: 20),
-            Text(
-              "How to report an issue",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-                decoration: TextDecoration.none,
+        padding: EdgeInsets.symmetric(
+          horizontal: horizontalPadding,
+          vertical: verticalPadding,
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Image
+              Flexible(
+                flex: 3,
+                child: Image.asset(
+                  "assets/images/report_issue.png",
+                  fit: BoxFit.contain,
+                  height: height * 0.3,
+                ),
               ),
-            ),
-            Text(
-              "Take photos",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-                decoration: TextDecoration.none,
+              SizedBox(height: height * 0.03),
+
+              // Texts
+              Flexible(
+                flex: 2,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isTablet ? 60 : 10,
+                      ),
+                      child: Text(
+                        "How to report an issue",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: isTablet ? 28 : headingFontSize,
+                          color: Colors.black,
+                          decoration: TextDecoration.none,
+                        ),
+                        softWrap: true,
+                      ),
+                    ),
+                    SizedBox(height: height * 0.015),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isTablet ? 60 : 10,
+                      ),
+                      child: Text(
+                        "Take photos",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: isTablet ? 24 : textFontSize,
+                          color: Colors.black,
+                          decoration: TextDecoration.none,
+                        ),
+                        softWrap: true,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isTablet ? 60 : 10,
+                      ),
+                      child: Text(
+                        "Add details",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: isTablet ? 24 : textFontSize,
+                          color: Colors.black,
+                          decoration: TextDecoration.none,
+                        ),
+                        softWrap: true,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isTablet ? 60 : 10,
+                      ),
+                      child: Text(
+                        "Auto GPS tagging",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: isTablet ? 24 : textFontSize,
+                          color: Colors.black,
+                          decoration: TextDecoration.none,
+                        ),
+                        softWrap: true,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Text(
-              "Add details",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-                decoration: TextDecoration.none,
+
+              SizedBox(height: height * 0.03),
+
+              // Next button
+              MyButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const OnboardingScreenThree(),
+                    ),
+                  );
+                },
+                text: "Next",
+                type: MyButtonType.elevated,
               ),
-            ),
-            Text(
-              "Auto GPS tagging",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-                decoration: TextDecoration.none,
-              ),
-            ),
-            Spacer(),
-            MyButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const OnboardingScreenThree(),
-                  ),
-                );
-              },
-              text: "Next",
-              type: MyButtonType.elevated,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

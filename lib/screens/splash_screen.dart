@@ -7,48 +7,67 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final bool isTablet = width >= 600;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/painted_top.jpg"),
-            fit: BoxFit.fitWidth,
+            image: const AssetImage("assets/images/painted_top.jpg"),
+            fit: isTablet ? BoxFit.cover : BoxFit.fitWidth,
             alignment: Alignment.topCenter,
           ),
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.only(
-              left: 16,
-              top: 40,
-              right: 16,
-              bottom: 90,
+            padding: EdgeInsets.only(
+              left: isTablet ? 40 : 16,
+              right: isTablet ? 40 : 16,
+              top: isTablet ? 60 : 40,
+              bottom: isTablet ? 120 : 90,
             ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // Top logo + title
                 Column(
                   children: [
-                    Image.asset("assets/images/logo.png", height: 50),
+                    Image.asset(
+                      "assets/images/logo.png",
+                      height: isTablet ? 90 : 50,
+                    ),
                     Text(
                       "Report, Resolve and Revive",
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 28,
+                      style: TextStyle(
+                        fontSize: isTablet ? 40 : 28,
                         fontWeight: FontWeight.w600,
-                        color: Colors
-                            .black, // always use white on splash backgrounds
+                        color: Colors.black,
                       ),
                     ),
                   ],
                 ),
-                Image.asset("assets/images/splash_screen_front.png"),
+
+                // THIS IS WHAT FIXES THE OVERFLOW:
+                // Let the middle image take only the available space.
+                Expanded(
+                  child: Center(
+                    child: Image.asset(
+                      "assets/images/splash_screen_front.png",
+                      width: isTablet ? width * 0.6 : width * 0.8,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+
+                // Buttons at bottom
                 Padding(
-                  padding: EdgeInsets.only(left: 40, right: 40),
+                  padding: EdgeInsets.symmetric(horizontal: isTablet ? 80 : 40),
                   child: Column(
-                    spacing: 16,
+                    spacing: isTablet ? 24 : 16,
                     children: [
                       MyButton(
                         onPressed: () {

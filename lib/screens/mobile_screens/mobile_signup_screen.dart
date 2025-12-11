@@ -27,10 +27,6 @@ class _MobileSignupScreenState extends State<MobileSignupScreen> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(
-          color: const Color(0xFFF1F1F1),
-          border: Border.all(color: Colors.grey),
-        ),
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
         child: SafeArea(
           child: SingleChildScrollView(
@@ -38,7 +34,7 @@ class _MobileSignupScreenState extends State<MobileSignupScreen> {
               key: _signupKey,
               child: Column(
                 spacing: 20,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     "Sign Up",

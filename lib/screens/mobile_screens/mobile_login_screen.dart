@@ -2,14 +2,14 @@ import 'package:fix_my_town/widgets/my_button.dart';
 import 'package:fix_my_town/widgets/my_text_form_field_login.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class MobileLoginScreen extends StatefulWidget {
+  const MobileLoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<MobileLoginScreen> createState() => _MobileLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _MobileLoginScreenState extends State<MobileLoginScreen> {
   final TextEditingController emailController = TextEditingController(text: "");
   final TextEditingController passController = TextEditingController(text: "");
 

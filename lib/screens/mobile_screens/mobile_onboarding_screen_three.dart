@@ -1,4 +1,5 @@
 import 'package:fix_my_town/screens/mobile_screens/mobile_signup_screen.dart';
+import 'package:fix_my_town/screens/signup_screen.dart';
 import 'package:fix_my_town/widgets/my_button.dart';
 import 'package:fix_my_town/widgets/my_skip_button.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,7 @@ class MobileOnboardingScreenThree extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const MobileSignupScreen(),
+                            builder: (context) => const SignupScreen(),
                           ),
                         );
                       },

@@ -1,3 +1,4 @@
+import 'package:fix_my_town/screens/tablet_screens/tablet_onboarding_screen.dart';
 import 'package:fix_my_town/widgets/my_button.dart';
 import 'package:flutter/material.dart';
 
@@ -75,7 +76,15 @@ class TabletSplashScreen extends StatelessWidget {
                               type: MyButtonType.outlined,
                             ),
                             MyButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const TabletOnboardingScreen(),
+                                  ),
+                                );
+                              },
                               text: "Login",
                               type: MyButtonType.elevated,
                             ),

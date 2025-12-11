@@ -86,6 +86,5 @@ class _TabletLoginScreenState extends State<TabletLoginScreen> {
         ),
       ),
     );
-    ;
   }
 }

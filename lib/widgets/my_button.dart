@@ -8,18 +8,20 @@ class MyButton extends StatelessWidget {
     required this.onPressed,
     required this.text,
     required this.type,
+    this.width,
   });
 
   final VoidCallback onPressed;
   final String text;
   final MyButtonType type;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
     switch (type) {
       case MyButtonType.elevated:
         return SizedBox(
-          width: double.infinity,
+          width: width ?? double.infinity,
           child: ElevatedButton(
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(
@@ -37,7 +39,7 @@ class MyButton extends StatelessWidget {
         );
       case MyButtonType.outlined:
         return SizedBox(
-          width: double.infinity,
+          width: width ?? double.infinity,
           child: OutlinedButton(
             onPressed: () {},
             style: OutlinedButton.styleFrom(

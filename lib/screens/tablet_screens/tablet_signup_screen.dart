@@ -89,12 +89,14 @@ class _TabletSignupScreenState extends State<TabletSignupScreen> {
                       SizedBox(height: 10),
                       MyButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                            ),
-                          );
+                          if (_tabletSignupKey.currentState!.validate()) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                            );
+                          }
                         },
                         text: "Signup",
                         type: MyButtonType.elevated,

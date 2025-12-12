@@ -54,7 +54,9 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                   ),
                   SizedBox(height: 10),
                   MyButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (_loginKey.currentState!.validate()) {}
+                    },
                     text: "Login",
                     type: MyButtonType.elevated,
                   ),

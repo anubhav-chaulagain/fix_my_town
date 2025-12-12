@@ -1,6 +1,7 @@
-import 'package:fix_my_town/screens/tablet_screens/tablet_onboarding_screen.dart';
+import 'package:fix_my_town/screens/onboarding_screen.dart';
 import 'package:fix_my_town/widgets/my_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class TabletSplashScreen extends StatelessWidget {
   const TabletSplashScreen({super.key});
@@ -8,85 +9,107 @@ class TabletSplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/painted_top.jpg"),
-            fit: BoxFit.fitWidth,
-            alignment: Alignment.topCenter,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: SvgPicture.asset(
+              "assets/images/Image.svg",
+              fit: BoxFit.fitWidth, // Same as your JPG
+              alignment: Alignment.topCenter,
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 500),
+
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: SafeArea(
               child: Container(
-                decoration: BoxDecoration(
-                  // border: Border.all(width: 2, color: Colors.grey),
-                  borderRadius: BorderRadius.circular(12),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.25),
-                      blurRadius: .5,
-                      spreadRadius: 2,
-                      offset: Offset(1.5, 1),
-                    ),
-                  ],
-                ),
+                alignment: Alignment.topLeft,
                 child: Padding(
                   padding: const EdgeInsets.only(
-                    left: 16,
-                    top: 40,
-                    right: 16,
-                    bottom: 90,
+                    left: 60,
+                    top: 60,
+                    right: 30,
+                    bottom: 0,
                   ),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.asset("assets/images/logo.png", height: 50),
+                          Image.asset("assets/images/logo.png", height: 60),
+                          SizedBox(height: 52),
                           Text(
-                            "Report, Resolve and Revive",
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.w600,
-                              color: Colors
-                                  .black, // always use white on splash backgrounds
+                            "Report, Resolve",
+                            style: TextStyle(
+                              fontSize: 60,
+                              height: 0.4,
+                              fontFamily: "Otomanopee One",
+                              color: Colors.white,
                             ),
+                          ),
+                          SizedBox(height: 2),
+                          Row(
+                            spacing: 16,
+                            children: [
+                              Text(
+                                "&",
+                                style: TextStyle(
+                                  fontSize: 80,
+                                  fontFamily: "Otomanopee One",
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Text(
+                                "Revive",
+                                style: TextStyle(
+                                  fontSize: 60,
+                                  fontFamily: "Otomanopee One",
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      Image.asset(
-                        "assets/images/splash_screen_front.png",
-                        height: 200,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 40, right: 40),
-                        child: Column(
-                          spacing: 16,
+                      Expanded(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            MyButton(
-                              onPressed: () {},
-                              text: "Get Started",
-                              type: MyButtonType.outlined,
+                            Row(
+                              children: [
+                                MyButton(
+                                  onPressed: () {},
+                                  text: "Get Started",
+                                  type: MyButtonType.outlined,
+                                  width: 200,
+                                ),
+                                SizedBox(width: 32),
+                                MyButton(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const OnboardingScreen(),
+                                      ),
+                                    );
+                                  },
+                                  text: "Log In",
+                                  type: MyButtonType.elevated,
+                                  width: 200,
+                                ),
+                              ],
                             ),
-                            MyButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const TabletOnboardingScreen(),
-                                  ),
-                                );
-                              },
-                              text: "Login",
-                              type: MyButtonType.elevated,
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.bottomRight,
+                                child: Image.asset(
+                                  "assets/images/splash_screen_front.png",
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -97,7 +120,7 @@ class TabletSplashScreen extends StatelessWidget {
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

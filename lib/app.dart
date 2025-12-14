@@ -1,4 +1,6 @@
+import 'package:fix_my_town/screens/mobile_screens/mobile_dashboard_screen.dart';
 import 'package:fix_my_town/screens/splash_screen.dart';
+import 'package:fix_my_town/theme/theme_data.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {
@@ -6,6 +8,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: SplashScreen());
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MobileDashboardScreen(),
+      theme: getApplicationTheme(),
+    );
   }
 }

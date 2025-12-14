@@ -77,6 +77,15 @@ flutter:
     - family: Otomanopee One
       fonts:
         - asset: assets/fonts/OtomanopeeOne-Regular.ttf
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+    - family: Roboto Bold
+      fonts:
+        - asset: assets/fonts/Roboto-Bold.ttf
+    - family: Roboto Light
+      fonts:
+        - asset: assets/fonts/Roboto-Light.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

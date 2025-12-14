@@ -1,3 +1,4 @@
+import 'package:fix_my_town/screens/dashboard_screen.dart';
 import 'package:fix_my_town/widgets/my_button.dart';
 import 'package:fix_my_town/widgets/my_text_form_field_login.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,14 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                   SizedBox(height: 10),
                   MyButton(
                     onPressed: () {
-                      if (_loginKey.currentState!.validate()) {}
+                      if (_loginKey.currentState!.validate()) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DashboardScreen(),
+                          ),
+                        );
+                      }
                     },
                     text: "Login",
                     type: MyButtonType.elevated,

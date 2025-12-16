@@ -1,3 +1,4 @@
+import 'package:fix_my_town/model/status_color_model.dart';
 import 'package:flutter/material.dart';
 
 class MyIssueCard extends StatelessWidget {
@@ -6,13 +7,15 @@ class MyIssueCard extends StatelessWidget {
     required this.title,
     required this.address,
     required this.img,
-    required this.desc,
+    required this.status,
+    required this.issueDate,
   });
 
   final String title;
   final String address;
   final String img;
-  final String desc;
+  final String status;
+  final String issueDate;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +23,18 @@ class MyIssueCard extends StatelessWidget {
       if (text.length <= max) return text;
       return '${text.substring(0, max)}..';
     }
+
+    StatusColorModel statusColors(String status) {
+      if (status == "Submitted") {
+        return const StatusColorModel(Color(0xFF3730A3), Color(0xFFE0E7FF));
+      } else if (status == "In Progress") {
+        return const StatusColorModel(Color(0xFFD97706), Color(0xFFFEF3C7));
+      } else {
+        return const StatusColorModel(Color(0xFF059669), Color(0xFFDCFCE7));
+      }
+    }
+
+    final StatusColorModel statColor = statusColors(status);
 
     return InkWell(
       child: Container(
@@ -55,12 +70,13 @@ class MyIssueCard extends StatelessWidget {
                     SizedBox(
                       child: Row(
                         children: [
-                          Icon(Icons.pin_drop_outlined, size: 16),
+                          // Icon(Icons.pin_drop_outlined, size: 16),
                           Text(
                             address,
                             style: TextStyle(
-                              fontStyle: FontStyle.italic,
                               fontSize: 14,
+                              color: Color(0xFF6B7280),
+                              letterSpacing: 1,
                             ),
                           ),
                         ],
@@ -74,24 +90,24 @@ class MyIssueCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            SizedBox(height: 28),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Description",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey[800],
+                Text(issueDate, style: TextStyle(color: Color(0xFF9CA3AF))),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: statColor.background,
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                ),
-                SizedBox(height: 2),
-                Text(
-                  shorten(desc, max: 75),
-                  style: TextStyle(
-                    fontStyle: FontStyle.italic,
-                    color: Colors.grey[600],
+                  child: Text(
+                    status,
+                    style: TextStyle(
+                      fontFamily: "Roboto Bold",
+                      fontSize: 12,
+                      color: statColor.text,
+                    ),
                   ),
                 ),
               ],

@@ -10,40 +10,40 @@ class MobileHomeScreen extends StatelessWidget {
       {
         "title": "Unmanaged Garbage",
         "address": "Dillibazar, Kathmandu",
-        "descText":
-            "There has not been the collection of garbage in the area for a long time which is really causing the land and air pollution.",
+        "issueDate": "Dec 12, 2025",
+        "status": "Resolved",
         "imageLink":
             "https://res.cloudinary.com/dvimlrbzd/image/upload/v1765790816/garbage_egmctn.jpg",
       },
       {
         "title": "Pothole on Main Road",
         "address": "Ring Road, Kalanki",
-        "descText":
-            "Large pothole causing traffic congestion and frequent vehicle damage.",
+        "issueDate": "Dec 14, 2025",
+        "status": "In Progress",
         "imageLink":
             "https://res.cloudinary.com/dvimlrbzd/image/upload/v1765808474/raods_jgwghy.jpg",
       },
       {
         "title": "Street Light Not Working",
         "address": "Lazimpat Chowk",
-        "descText":
-            "Street light has been off for weeks, making the area unsafe at night.",
+        "issueDate": "Dec 15, 2025",
+        "status": "Submitted",
         "imageLink":
             "https://res.cloudinary.com/dvimlrbzd/image/upload/v1765808519/lights_gwll9m.jpg",
       },
       {
         "title": "Water Leakage",
         "address": "New Baneshwor",
-        "descText":
-            "Continuous water leakage from underground pipe wasting clean water.",
+        "issueDate": "Dec 13, 2025",
+        "status": "In Progress",
         "imageLink":
             "https://res.cloudinary.com/dvimlrbzd/image/upload/v1765808611/water_leakage_sekrxw.jpg",
       },
       {
         "title": "Broken Drain Cover",
         "address": "Koteshwor Bus Stop",
-        "descText":
-            "Open drain with broken cover posing danger to pedestrians.",
+        "issueDate": "Dec 10, 2025",
+        "status": "Resolved",
         "imageLink":
             "https://res.cloudinary.com/dvimlrbzd/image/upload/v1765808610/drain_cover_damge_hubsmh.jpg",
       },
@@ -60,7 +60,8 @@ class MobileHomeScreen extends StatelessWidget {
           title: issue["title"]!,
           address: issue["address"]!,
           img: issue["imageLink"]!,
-          desc: issue["descText"]!,
+          status: issue["status"]!,
+          issueDate: issue["issueDate"]!,
         );
       },
       separatorBuilder: (BuildContext context, int index) {

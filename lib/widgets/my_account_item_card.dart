@@ -14,12 +14,11 @@ class MyAccountItemCard extends StatelessWidget {
         leading: CircleAvatar(
           radius: 22,
           backgroundColor: item.color.withValues(alpha: 0.2),
-          child: Icon(Icons.person_outline, color: item.color),
+          child: Icon(item.icon, color: item.color),
         ),
         title: Text(item.label, style: TextStyle(fontFamily: "Roboto Bold")),
         trailing: Icon(Icons.chevron_right, color: Color(0xff6b7280)),
       ),
     );
-    ;
   }
 }

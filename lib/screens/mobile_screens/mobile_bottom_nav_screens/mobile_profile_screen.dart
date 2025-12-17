@@ -169,6 +169,7 @@ class MobileProfileScreen extends StatelessWidget {
             ),
             ListView.builder(
               itemCount: accountItems.length,
+              physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (BuildContext context, int index) {
                 AccountItem item = accountItems[index];
@@ -189,6 +190,7 @@ class MobileProfileScreen extends StatelessWidget {
             ),
             ListView.builder(
               itemCount: supportItems.length,
+              physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (BuildContext context, int index) {
                 AccountItem item = supportItems[index];

@@ -39,7 +39,7 @@ class MyIssueCard extends StatelessWidget {
     return InkWell(
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,

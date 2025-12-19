@@ -20,7 +20,6 @@ class _MobileDashboardScreenState extends State<MobileDashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _selectedIndex == 0 ? null : AppBar(title: Text("Dashboard")),
       body: bottomScreens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: [

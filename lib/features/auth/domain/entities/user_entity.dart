@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-class AuthEntity extends Equatable {
+class UserEntity extends Equatable {
   final String? userId;
   final String? fullname;
   final String email;
@@ -8,7 +8,7 @@ class AuthEntity extends Equatable {
   final String? role;
   final String? profilePicture;
 
-  const AuthEntity({
+  const UserEntity({
     this.fullname,
     required this.email,
     required this.password,

@@ -1,22 +1,26 @@
 import 'package:equatable/equatable.dart';
 
+enum UserRole { citizen, authority }
+
 class UserEntity extends Equatable {
   final String? userId;
-  final String? fullname;
+  final String fullName;
   final String email;
-  final String password;
-  final String? role;
+  final String? password;
+  final UserRole role;
   final String? profilePicture;
+  final String? status;
 
   const UserEntity({
-    this.fullname,
-    required this.email,
-    required this.password,
     this.userId,
-    this.role,
+    required this.fullName,
+    required this.email,
+    this.password,
+    required this.role,
     this.profilePicture,
+    this.status,
   });
 
   @override
-  List<Object?> get props => [email];
+  List<Object?> get props => [userId, email, role];
 }

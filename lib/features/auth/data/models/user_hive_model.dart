@@ -10,44 +10,49 @@ class UserHiveModel extends HiveObject {
   final String? userId;
 
   @HiveField(1)
-  final String? fullname;
+  final String fullname;
 
   @HiveField(2)
   final String email;
 
   @HiveField(3)
-  final String password;
+  final String? password;
 
   @HiveField(4)
-  final String? role;
+  final String role;
 
   @HiveField(5)
   final String? profilePicture;
 
+  @HiveField(6)
+  final String? status;
+
   UserHiveModel({
     this.userId,
-    this.fullname,
+    required this.fullname,
     required this.email,
-    required this.password,
-    this.role,
+    this.password,
+    required this.role,
     this.profilePicture,
+    this.status,
   });
 
   // Convert model to auth entity
   UserEntity toEntity() {
     return UserEntity(
-      userId: userId,
-      fullname: fullname,
+      fullName: fullname,
       email: email,
-      password: password,
-      role: role,
-      profilePicture: profilePicture,
+      role: role == 'citizen' ? UserRole.citizen : UserRole.authority,
     );
   }
 
   // Convert auth entity to model
   factory UserHiveModel.fromEntity(UserEntity entity) {
-    return UserHiveModel(email: entity.email, password: entity.password);
+    return UserHiveModel(
+      email: entity.email,
+      fullname: entity.fullName,
+      role: entity.role == UserRole.citizen ? 'citizen' : 'authority',
+    );
   }
 
   // Convert list of models to list of auth entities

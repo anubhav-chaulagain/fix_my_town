@@ -1,4 +1,4 @@
-import 'package:fix_my_town/app.dart';
+import 'package:fix_my_town/app/app.dart';
 import 'package:flutter/material.dart';
 
 void main() {

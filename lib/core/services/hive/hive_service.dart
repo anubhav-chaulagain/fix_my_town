@@ -25,8 +25,8 @@ class HiveService {
     await Hive.openBox<AuthHiveModel>(HiveTableConstant.userTable);
   }
 
-  // Delete all users
-  Future<void> _deleteAllUsers() async {
+  // Delete all batches
+  Future<void> deleteAllBatches() async {
     await _authBox.clear();
   }
 

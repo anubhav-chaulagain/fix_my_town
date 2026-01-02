@@ -1,5 +1,5 @@
-class HiveTableConstants {
-  HiveTableConstants._();
+class HiveTableConstant {
+  HiveTableConstant._();
 
   // Database name
   static const String dbName = "fix_my_town_db";

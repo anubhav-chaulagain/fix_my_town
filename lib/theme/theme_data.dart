@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 ThemeData getApplicationTheme() {
   return ThemeData(
-    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0x1EA095)),
+    colorScheme: ColorScheme.fromSeed(seedColor: const Color(0x001ea095)),
     scaffoldBackgroundColor: Colors.white,
     fontFamily: "Roboto",
     appBarTheme: AppBarThemeData(

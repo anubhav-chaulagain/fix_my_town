@@ -19,7 +19,7 @@ class TabletSplashScreen extends StatelessWidget {
             ),
           ),
 
-          Container(
+          SizedBox(
             width: double.infinity,
             height: double.infinity,
             child: SafeArea(

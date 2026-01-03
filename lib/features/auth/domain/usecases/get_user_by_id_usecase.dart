@@ -4,20 +4,20 @@ import 'package:fix_my_town/core/error/failures.dart';
 import 'package:fix_my_town/core/usecases/app_usecase.dart';
 import 'package:fix_my_town/features/auth/domain/repositories/user_repository.dart';
 
-class DeleteUserUsecaseParams extends Equatable {
+class GetUserByIdUsercaseParams extends Equatable {
   final String userId;
-  const DeleteUserUsecaseParams({required this.userId});
+  const GetUserByIdUsercaseParams({required this.userId});
 
   @override
   List<Object?> get props => [userId];
 }
 
-class DeleteUserUsecase
-    implements UsecaseWithParams<void, DeleteUserUsecaseParams> {
+class GetUserByIdUsercase
+    implements UsecaseWithParams<void, GetUserByIdUsercaseParams> {
   final IUserRepository _userRepository;
-  DeleteUserUsecase(this._userRepository);
+  GetUserByIdUsercase(this._userRepository);
   @override
-  Future<Either<Failure, void>> call(DeleteUserUsecaseParams params) {
+  Future<Either<Failure, void>> call(GetUserByIdUsercaseParams params) {
     return _userRepository.deleteUser(params.userId);
   }
 }

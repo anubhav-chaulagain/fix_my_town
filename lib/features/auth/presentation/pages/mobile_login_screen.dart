@@ -1,22 +1,41 @@
+import 'package:fix_my_town/core/utils/snackbar_utils.dart';
+import 'package:fix_my_town/features/auth/presentation/state/auth_state.dart';
+import 'package:fix_my_town/features/auth/presentation/view_model/auth_viewmodel.dart';
 import 'package:fix_my_town/screens/dashboard_screen.dart';
 import 'package:fix_my_town/widgets/my_button.dart';
 import 'package:fix_my_town/widgets/my_text_form_field_login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MobileLoginScreen extends StatefulWidget {
+class MobileLoginScreen extends ConsumerStatefulWidget {
   const MobileLoginScreen({super.key});
 
   @override
-  State<MobileLoginScreen> createState() => _MobileLoginScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _MobileLoginScreenState();
 }
 
-class _MobileLoginScreenState extends State<MobileLoginScreen> {
+class _MobileLoginScreenState extends ConsumerState<MobileLoginScreen> {
   final TextEditingController emailController = TextEditingController(text: "");
   final TextEditingController passController = TextEditingController(text: "");
 
   final _loginKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    ref.listen<AuthState>(authViewmodelProvider, (previous, next) {
+      if (next.status == AuthStatus.error) {
+        SnackbarUtils.showError(
+          context,
+          next.errorMessage ?? "An error occurred",
+        );
+      } else if (next.status == AuthStatus.authenticated) {
+        SnackbarUtils.showSuccess(context, "Logged In Successfully!");
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const DashboardScreen()),
+        );
+      }
+    });
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -57,12 +76,12 @@ class _MobileLoginScreenState extends State<MobileLoginScreen> {
                   MyButton(
                     onPressed: () {
                       if (_loginKey.currentState!.validate()) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const DashboardScreen(),
-                          ),
-                        );
+                        ref
+                            .read(authViewmodelProvider.notifier)
+                            .login(
+                              email: emailController.text,
+                              password: passController.text.trim(),
+                            );
                       }
                     },
                     text: "Login",

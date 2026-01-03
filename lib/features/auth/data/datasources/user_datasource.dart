@@ -1,9 +1,16 @@
 import 'package:fix_my_town/features/auth/data/models/user_hive_model.dart';
 
 abstract interface class IUserDatasource {
-  Future<List<UserHiveModel>> getAllUsers();
-  Future<UserHiveModel?> getUserById(String userId);
-  Future<bool> createUser(UserHiveModel user);
-  Future<bool> updateUser(UserHiveModel user);
-  Future<bool> deleteUser(String userId);
+  Future<bool> register(UserHiveModel user);
+  Future<UserHiveModel?> login(String email, String password);
+  Future<UserHiveModel?> getCurrentUser();
+  Future<bool> logout();
+
+  Future<bool> ifEmailExists(String email);
+
+  // Future<List<UserHiveModel>> getAllUsers();
+  // Future<UserHiveModel?> getUserById(String userId);
+  // Future<bool> createUser(UserHiveModel user);
+  // Future<bool> updateUser(UserHiveModel user);
+  // Future<bool> deleteUser(String userId);
 }

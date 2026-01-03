@@ -1,6 +1,7 @@
 import 'package:fix_my_town/core/constants/hive_table_constants.dart';
 import 'package:fix_my_town/features/auth/domain/entities/user_entity.dart';
 import 'package:hive/hive.dart';
+import 'package:uuid/uuid.dart';
 
 part 'user_hive_model.g.dart';
 
@@ -28,30 +29,38 @@ class UserHiveModel extends HiveObject {
   final String? status;
 
   UserHiveModel({
-    this.userId,
+    String? userId,
     required this.fullname,
     required this.email,
     this.password,
     required this.role,
     this.profilePicture,
     this.status,
-  });
+  }) : userId = userId ?? Uuid().v4();
 
   // Convert model to auth entity
   UserEntity toEntity() {
     return UserEntity(
+      userId: userId,
       fullName: fullname,
       email: email,
+      password: password,
       role: role == 'citizen' ? UserRole.citizen : UserRole.authority,
+      profilePicture: profilePicture,
+      status: status,
     );
   }
 
   // Convert auth entity to model
   factory UserHiveModel.fromEntity(UserEntity entity) {
     return UserHiveModel(
-      email: entity.email,
+      userId: entity.userId,
       fullname: entity.fullName,
+      email: entity.email,
+      password: entity.password,
       role: entity.role == UserRole.citizen ? 'citizen' : 'authority',
+      profilePicture: entity.profilePicture,
+      status: entity.status,
     );
   }
 

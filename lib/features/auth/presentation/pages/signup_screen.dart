@@ -1,5 +1,5 @@
-import 'package:fix_my_town/screens/mobile_screens/mobile_signup_screen.dart';
-import 'package:fix_my_town/screens/tablet_screens/tablet_signup_screen.dart';
+import 'package:fix_my_town/features/auth/presentation/pages/mobile_signup_screen.dart';
+import 'package:fix_my_town/features/auth/presentation/pages/tablet_signup_screen.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatelessWidget {

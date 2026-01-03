@@ -1,5 +1,5 @@
-import 'package:fix_my_town/screens/mobile_screens/mobile_login_screen.dart';
-import 'package:fix_my_town/screens/tablet_screens/tablet_login_screen.dart';
+import 'package:fix_my_town/features/auth/presentation/pages/mobile_login_screen.dart';
+import 'package:fix_my_town/features/auth/presentation/pages/tablet_login_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatelessWidget {

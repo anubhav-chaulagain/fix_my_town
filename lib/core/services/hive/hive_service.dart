@@ -1,7 +1,12 @@
 import 'package:fix_my_town/core/constants/hive_table_constants.dart';
 import 'package:fix_my_town/features/auth/data/models/user_hive_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
+
+final hiveServiceProvider = Provider<HiveService>((ref) {
+  return HiveService();
+});
 
 class HiveService {
   // Initialize Hive
@@ -41,28 +46,59 @@ class HiveService {
   Box<UserHiveModel> get _authBox =>
       Hive.box<UserHiveModel>(HiveTableConstant.userTable);
 
-  // Create a new user
-  Future<UserHiveModel> createUser(UserHiveModel auth) async {
-    await _authBox.put(auth.userId, auth);
-    return auth;
+  // Register a new user
+  Future<UserHiveModel> register(UserHiveModel user) async {
+    await _authBox.put(user.userId, user);
+    return user;
   }
 
-  // Get all users
-  List<UserHiveModel> getAllUsers() {
-    return _authBox.values.toList();
+  // login
+  Future<UserHiveModel?> login(String email, String password) async {
+    final users = _authBox.values.where(
+      (user) => user.email == email && user.password == password,
+    );
+    if (users.isNotEmpty) {
+      return users.first;
+    }
+    return null;
   }
 
-  // Get user by Id
-  UserHiveModel? getUserById(String userId) {
+  // logout
+  Future<void> logout() async {}
+
+  // get current user
+  UserHiveModel? getCurrentUser(String userId) {
     return _authBox.get(userId);
   }
 
-  // Upadate user
-  Future<void> updateUser(UserHiveModel auth) async {
-    await _authBox.put(auth.userId, auth);
+  // if email exists
+  Future<bool> ifEmailExists(String email) async {
+    final users = _authBox.values.where((user) => user.email == email);
+    return users.isNotEmpty;
   }
 
-  Future<void> deleteUser(String userId) async {
-    await _authBox.delete(userId);
-  }
+  // // Create a new user
+  // Future<UserHiveModel> createUser(UserHiveModel auth) async {
+  //   await _authBox.put(auth.userId, auth);
+  //   return auth;
+  // }
+
+  // // Get all users
+  // List<UserHiveModel> getAllUsers() {
+  //   return _authBox.values.toList();
+  // }
+
+  // // Get user by Id
+  // UserHiveModel? getUserById(String userId) {
+  //   return _authBox.get(userId);
+  // }
+
+  // // Upadate user
+  // Future<void> updateUser(UserHiveModel auth) async {
+  //   await _authBox.put(auth.userId, auth);
+  // }
+
+  // Future<void> deleteUser(String userId) async {
+  //   await _authBox.delete(userId);
+  // }
 }

@@ -1,16 +1,21 @@
-import 'package:fix_my_town/screens/login_screen.dart';
+import 'package:fix_my_town/core/utils/snackbar_utils.dart';
+import 'package:fix_my_town/features/auth/presentation/state/auth_state.dart';
+import 'package:fix_my_town/features/auth/presentation/view_model/auth_viewmodel.dart';
+import 'package:fix_my_town/features/auth/presentation/pages/login_screen.dart';
 import 'package:fix_my_town/widgets/my_button.dart';
 import 'package:fix_my_town/widgets/my_text_form_field_login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MobileSignupScreen extends StatefulWidget {
+class MobileSignupScreen extends ConsumerStatefulWidget {
   const MobileSignupScreen({super.key});
 
   @override
-  State<MobileSignupScreen> createState() => _MobileSignupScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _MobileSignupScreenState();
 }
 
-class _MobileSignupScreenState extends State<MobileSignupScreen> {
+class _MobileSignupScreenState extends ConsumerState<MobileSignupScreen> {
   final TextEditingController nameController = TextEditingController(text: "");
 
   final TextEditingController emailController = TextEditingController(text: "");
@@ -24,6 +29,23 @@ class _MobileSignupScreenState extends State<MobileSignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AuthState>(authViewmodelProvider, (previous, next) {
+      if (next.status == AuthStatus.error) {
+        SnackbarUtils.showError(
+          context,
+          next.errorMessage ?? "An error occurred",
+        );
+      } else if (next.status == AuthStatus.registered) {
+        SnackbarUtils.showSuccess(
+          context,
+          "Registration Successful! Please Login.",
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      }
+    });
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -72,12 +94,14 @@ class _MobileSignupScreenState extends State<MobileSignupScreen> {
                   MyButton(
                     onPressed: () {
                       if (_signupKey.currentState!.validate()) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
-                          ),
-                        );
+                        ref
+                            .read(authViewmodelProvider.notifier)
+                            .register(
+                              fullName: nameController.text,
+                              email: emailController.text,
+                              password: passController.text,
+                              role: "user",
+                            );
                       }
                     },
                     text: "Signup",

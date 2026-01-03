@@ -1,6 +1,13 @@
-import 'package:fix_my_town/app/app.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fix_my_town/app/app.dart';
+import 'package:fix_my_town/core/services/hive/hive_service.dart';
 
-void main() {
-  runApp(App());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final hiveService = HiveService();
+  await hiveService.init();
+
+  runApp(ProviderScope(child: const App()));
 }

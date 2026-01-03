@@ -1,4 +1,4 @@
-import 'package:fix_my_town/screens/signup_screen.dart';
+import 'package:fix_my_town/features/auth/presentation/pages/signup_screen.dart';
 import 'package:fix_my_town/widgets/my_onboarding_card_label.dart';
 import 'package:flutter/material.dart';
 

@@ -1,31 +1,38 @@
 import 'package:equatable/equatable.dart';
 import 'package:fix_my_town/features/auth/domain/entities/user_entity.dart';
 
-enum AuthStatus { initial, loading, loaded, error, created, updated, deleted }
+enum AuthStatus {
+  initial,
+  loading,
+  authenticated,
+  unauthenticated,
+  registered,
+  error,
+}
 
 class AuthState extends Equatable {
   final AuthStatus status;
-  final List<UserEntity> users;
+  final UserEntity? userEntity;
   final String? errorMessage;
 
   const AuthState({
     this.status = AuthStatus.initial,
-    this.users = const [],
+    this.userEntity,
     this.errorMessage,
   });
 
   AuthState copyWith({
     AuthStatus? status,
-    List<UserEntity>? users,
+    UserEntity? userEntity,
     String? errorMessage,
   }) {
     return AuthState(
       status: status ?? this.status,
-      users: users ?? this.users,
+      userEntity: userEntity ?? this.userEntity,
       errorMessage: errorMessage,
     );
   }
 
   @override
-  List<Object?> get props => [status, users, errorMessage];
+  List<Object?> get props => [status, userEntity, errorMessage];
 }

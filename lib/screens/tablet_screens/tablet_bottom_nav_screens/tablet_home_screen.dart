@@ -1,6 +1,6 @@
 import 'package:fix_my_town/model/category_model.dart';
-import 'package:fix_my_town/widgets/my_category_card.dart';
-import 'package:fix_my_town/widgets/my_issue_card.dart';
+import 'package:fix_my_town/core/widgets/my_category_card.dart';
+import 'package:fix_my_town/core/widgets/my_issue_card.dart';
 import 'package:flutter/material.dart';
 
 class TabletHomeScreen extends StatelessWidget {

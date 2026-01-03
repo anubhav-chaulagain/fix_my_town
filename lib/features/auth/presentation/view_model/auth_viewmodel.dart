@@ -1,4 +1,3 @@
-import 'package:fix_my_town/features/auth/domain/entities/user_entity.dart';
 import 'package:fix_my_town/features/auth/domain/usecases/login_usecase.dart';
 import 'package:fix_my_town/features/auth/domain/usecases/register_usecase.dart';
 import 'package:fix_my_town/features/auth/presentation/state/auth_state.dart';

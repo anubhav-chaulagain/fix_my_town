@@ -1,5 +1,5 @@
-import 'package:fix_my_town/widgets/my_issue_card.dart';
-import 'package:fix_my_town/widgets/my_issue_count_card.dart';
+import 'package:fix_my_town/core/widgets/my_issue_card.dart';
+import 'package:fix_my_town/core/widgets/my_issue_count_card.dart';
 import 'package:flutter/material.dart';
 
 class MobileMyReportsScreen extends StatelessWidget {

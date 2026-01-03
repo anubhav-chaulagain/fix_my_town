@@ -1,5 +1,5 @@
 import 'package:fix_my_town/model/account_item_model.dart';
-import 'package:fix_my_town/widgets/my_account_item_card.dart';
+import 'package:fix_my_town/core/widgets/my_account_item_card.dart';
 import 'package:flutter/material.dart';
 
 class MobileProfileScreen extends StatelessWidget {

@@ -2,8 +2,8 @@ import 'package:fix_my_town/core/utils/snackbar_utils.dart';
 import 'package:fix_my_town/features/auth/presentation/state/auth_state.dart';
 import 'package:fix_my_town/features/auth/presentation/view_model/auth_viewmodel.dart';
 import 'package:fix_my_town/screens/dashboard_screen.dart';
-import 'package:fix_my_town/widgets/my_button.dart';
-import 'package:fix_my_town/widgets/my_text_form_field_login.dart';
+import 'package:fix_my_town/core/widgets/my_button.dart';
+import 'package:fix_my_town/core/widgets/my_text_form_field_login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

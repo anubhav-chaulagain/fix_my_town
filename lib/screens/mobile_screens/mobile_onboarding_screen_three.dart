@@ -1,6 +1,6 @@
 import 'package:fix_my_town/features/auth/presentation/pages/signup_screen.dart';
-import 'package:fix_my_town/widgets/my_button.dart';
-import 'package:fix_my_town/widgets/my_skip_button.dart';
+import 'package:fix_my_town/core/widgets/my_button.dart';
+import 'package:fix_my_town/core/widgets/my_skip_button.dart';
 import 'package:flutter/material.dart';
 
 class MobileOnboardingScreenThree extends StatelessWidget {

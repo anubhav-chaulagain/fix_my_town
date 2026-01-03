@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fix_my_town/core/error/failures.dart';
 import 'package:fix_my_town/core/usecases/app_usecase.dart';
-import 'package:fix_my_town/features/auth/data/models/user_hive_model.dart';
 import 'package:fix_my_town/features/auth/data/repositories/user_repository.dart';
 import 'package:fix_my_town/features/auth/domain/entities/user_entity.dart';
 import 'package:fix_my_town/features/auth/domain/repositories/user_repository.dart';

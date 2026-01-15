@@ -1,6 +1,45 @@
+import 'package:fix_my_town/app/theme/app_colors.dart';
+import 'package:fix_my_town/features/auth/presentation/pages/login_screen.dart';
+import 'package:fix_my_town/features/auth/presentation/pages/mobile_login_screen.dart';
 import 'package:fix_my_town/model/account_item_model.dart';
 import 'package:fix_my_town/core/widgets/my_account_item_card.dart';
 import 'package:flutter/material.dart';
+
+void _showLogoutDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
+      content: Text('Are you sure you want to logout?'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(
+            'Cancel',
+            style: TextStyle(color: const Color.fromRGBO(107, 114, 128, 1)),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+            );
+          },
+          child: Text(
+            'Logout',
+            style: TextStyle(
+              color: AppColors.error,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
 class MobileProfileScreen extends StatelessWidget {
   const MobileProfileScreen({super.key});
@@ -205,6 +244,9 @@ class MobileProfileScreen extends StatelessWidget {
               Card(
                 color: Colors.white,
                 child: ListTile(
+                  onTap: () {
+                    _showLogoutDialog(context);
+                  },
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 4,

@@ -107,6 +107,17 @@ class _MobileSignupScreenState extends ConsumerState<MobileSignupScreen> {
                     text: "Signup",
                     type: MyButtonType.elevated,
                   ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                    },
+                    child: Text("Already have an account?"),
+                  ),
                 ],
               ),
             ),

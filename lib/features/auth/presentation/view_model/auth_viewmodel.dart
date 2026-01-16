@@ -1,4 +1,5 @@
 import 'package:fix_my_town/features/auth/domain/usecases/login_usecase.dart';
+import 'package:fix_my_town/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:fix_my_town/features/auth/domain/usecases/register_usecase.dart';
 import 'package:fix_my_town/features/auth/presentation/state/auth_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,12 +11,22 @@ final authViewmodelProvider = NotifierProvider<AuthViewmodel, AuthState>(() {
 class AuthViewmodel extends Notifier<AuthState> {
   late final RegisterUsecase _registerUsecase;
   late final LoginUsecase _loginUsecase;
+  late final LogoutUsecase _logoutUsecase;
 
   @override
   AuthState build() {
     _registerUsecase = ref.read(registerUsecaseProvider);
     _loginUsecase = ref.read(loginUsecaseProvider);
+    _logoutUsecase = ref.read(logoutUsecaseProvider);
     return AuthState();
+  }
+
+  Future<void> logout() async {
+    await _logoutUsecase.call();
+    state = state.copyWith(
+      status: AuthStatus.unauthenticated,
+      userEntity: null,
+    );
   }
 
   Future<void> register({

@@ -1,17 +1,26 @@
 import 'package:fix_my_town/core/services/hive/hive_service.dart';
+import 'package:fix_my_town/core/services/storage/user_session_service.dart';
 import 'package:fix_my_town/features/auth/data/datasources/user_datasource.dart';
 import 'package:fix_my_town/features/auth/data/models/user_hive_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final userLocalDatasourceProvider = Provider<AuthLocalDatasource>((ref) {
-  return AuthLocalDatasource(hiveService: ref.read(hiveServiceProvider));
+  final userSessionService = ref.read(userSessionServiceProvider);
+  return AuthLocalDatasource(
+    hiveService: ref.read(hiveServiceProvider),
+    userSessionService: userSessionService,
+  );
 });
 
 class AuthLocalDatasource implements IUserDatasource {
   final HiveService _hiveService;
+  final UserSessionService _userSessionService;
 
-  AuthLocalDatasource({required HiveService hiveService})
-    : _hiveService = hiveService;
+  AuthLocalDatasource({
+    required HiveService hiveService,
+    required UserSessionService userSessionService,
+  }) : _userSessionService = userSessionService,
+       _hiveService = hiveService;
 
   @override
   Future<UserHiveModel?> getCurrentUser() {
@@ -22,9 +31,19 @@ class AuthLocalDatasource implements IUserDatasource {
   @override
   Future<UserHiveModel?> login(String email, String password) async {
     try {
-      return await _hiveService.login(email, password);
+      final user = await _hiveService.login(email, password);
+      if (user != null) {
+        await _userSessionService.saveUserSession(
+          userId: user.userId!,
+          email: user.email,
+          role: user.role,
+          fullname: user.fullname,
+          profileImage: user.profilePicture,
+        );
+      }
+      return user;
     } catch (e) {
-      return null;
+      return Future.value(null);
     }
   }
 
@@ -32,6 +51,7 @@ class AuthLocalDatasource implements IUserDatasource {
   Future<bool> logout() async {
     try {
       await _hiveService.logout();
+      await _userSessionService.clearUserSession();
       return true;
     } catch (e) {
       return false;

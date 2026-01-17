@@ -1,33 +1,39 @@
 import 'package:fix_my_town/app/theme/app_colors.dart';
 import 'package:fix_my_town/features/auth/presentation/pages/login_screen.dart';
+import 'package:fix_my_town/features/auth/presentation/view_model/auth_viewmodel.dart';
 import 'package:fix_my_town/model/account_item_model.dart';
 import 'package:fix_my_town/core/widgets/my_account_item_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void _showLogoutDialog(BuildContext context) {
+void _showLogoutDialog(BuildContext context, WidgetRef ref) {
   showDialog(
     context: context,
-    builder: (context) => AlertDialog(
+    builder: (_) => AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      title: Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
-      content: Text('Are you sure you want to logout?'),
+      title: const Text(
+        'Logout',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      content: const Text('Are you sure you want to logout?'),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text(
-            'Cancel',
-            style: TextStyle(color: const Color.fromRGBO(107, 114, 128, 1)),
-          ),
+          child: const Text('Cancel'),
         ),
         TextButton(
           onPressed: () {
-            Navigator.pop(context);
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginScreen()),
-            );
+            ref.read(authViewmodelProvider.notifier).logout();
+            Navigator.of(context).pop(); // close dialog
+
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
+                (_) => false,
+              );
+            });
           },
-          child: Text(
+          child: const Text(
             'Logout',
             style: TextStyle(
               color: AppColors.error,
@@ -40,9 +46,15 @@ void _showLogoutDialog(BuildContext context) {
   );
 }
 
-class MobileProfileScreen extends StatelessWidget {
+class MobileProfileScreen extends ConsumerStatefulWidget {
   const MobileProfileScreen({super.key});
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _MobileProfileScreenState();
+}
+
+class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final List<AccountItem> accountItems = [
@@ -244,7 +256,7 @@ class MobileProfileScreen extends StatelessWidget {
                 color: Colors.white,
                 child: ListTile(
                   onTap: () {
-                    _showLogoutDialog(context);
+                    _showLogoutDialog(context, ref);
                   },
                   contentPadding: EdgeInsets.symmetric(
                     horizontal: 12,

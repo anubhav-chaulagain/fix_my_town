@@ -34,7 +34,7 @@ class UserSessionService {
     await _prefs.setBool(_keyIsLoggedIn, true);
     await _prefs.setString(_keyUserId, userId);
     await _prefs.setString(_keyUserEmail, email);
-    await _prefs.setString(_keyRole, role);
+    await _prefs.setString(_keyRole, "$role");
     await _prefs.setString(_keyUserFullname, fullname);
     if (profileImage != null) {
       await _prefs.setString(_keyProfileImage, profileImage);

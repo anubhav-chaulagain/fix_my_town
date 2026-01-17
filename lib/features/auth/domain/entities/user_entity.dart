@@ -7,7 +7,7 @@ class UserEntity extends Equatable {
   final String fullName;
   final String email;
   final String? password;
-  final UserRole role;
+  final String role;
   final String? profilePicture;
   final String? status;
 

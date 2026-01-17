@@ -2,7 +2,7 @@ class ApiEndpoints {
   ApiEndpoints._();
 
   //Info: Base URL
-  static const String baseUrl = "http://10.0.2.2:4000"; // info: for android
+  static const String baseUrl = "http://10.0.2.2:5050"; // info: for android
   // static const String baseUrl =
   //     "http://192.168.100.8:4000"; // info: for physical device use computers IP
 

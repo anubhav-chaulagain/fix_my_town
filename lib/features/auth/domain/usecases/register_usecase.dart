@@ -39,8 +39,7 @@ class RegisterUsecase
       fullName: params.fullName,
       email: params.email,
       password: params.password,
-      role: params.role == 'citizen' ? UserRole.citizen : UserRole.authority,
-      profilePicture: null,
+      role: params.role == 'authority' ? 'authority' : 'citizen',
       status: 'active',
     );
     return _authRepository.register(user);

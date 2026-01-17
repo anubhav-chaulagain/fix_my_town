@@ -45,7 +45,7 @@ class UserHiveModel extends HiveObject {
       fullName: fullname,
       email: email,
       password: password,
-      role: role == 'citizen' ? UserRole.citizen : UserRole.authority,
+      role: role,
       profilePicture: profilePicture,
       status: status,
     );
@@ -58,7 +58,7 @@ class UserHiveModel extends HiveObject {
       fullname: entity.fullName,
       email: entity.email,
       password: entity.password,
-      role: entity.role == UserRole.citizen ? 'citizen' : 'authority',
+      role: entity.role,
       profilePicture: entity.profilePicture,
       status: entity.status,
     );

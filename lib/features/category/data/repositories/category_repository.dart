@@ -1,9 +1,16 @@
 import 'package:dartz/dartz.dart';
 import 'package:fix_my_town/core/error/failures.dart';
 import 'package:fix_my_town/features/category/data/datasources/category_datasource.dart';
+import 'package:fix_my_town/features/category/data/datasources/local/category_local_datasource.dart';
 import 'package:fix_my_town/features/category/data/models/category_hive_model.dart';
 import 'package:fix_my_town/features/category/domain/entities/category_entity.dart';
 import 'package:fix_my_town/features/category/domain/repositories/category_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final categoryRepositoryProvider = Provider<ICategoryRepository>((ref) {
+  final categoryLocalDatasource = ref.read(categoryLocalDatasourceProvider);
+  return CategoryRepository(categoryDatasource: categoryLocalDatasource);
+});
 
 class CategoryRepository implements ICategoryRepository {
   final ICategoryDatasource _categoryDatasource;

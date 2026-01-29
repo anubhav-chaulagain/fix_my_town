@@ -1,6 +1,14 @@
 import 'package:fix_my_town/core/services/hive/hive_service.dart';
 import 'package:fix_my_town/features/category/data/datasources/category_datasource.dart';
 import 'package:fix_my_town/features/category/data/models/category_hive_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final categoryLocalDatasourceProvider = Provider<CategoryLocalDatasource>((
+  ref,
+) {
+  final hiveService = ref.read(hiveServiceProvider);
+  return CategoryLocalDatasource(hiveService: hiveService);
+});
 
 class CategoryLocalDatasource implements ICategoryDatasource {
   final HiveService _hiveService;

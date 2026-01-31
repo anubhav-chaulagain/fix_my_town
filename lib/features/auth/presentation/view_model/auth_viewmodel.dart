@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:fix_my_town/features/auth/domain/usecases/login_usecase.dart';
 import 'package:fix_my_town/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:fix_my_town/features/auth/domain/usecases/register_usecase.dart';
+import 'package:fix_my_town/features/auth/domain/usecases/update_usecase.dart';
 import 'package:fix_my_town/features/auth/domain/usecases/upload_photo_usecase.dart';
 import 'package:fix_my_town/features/auth/presentation/state/auth_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,12 +17,15 @@ class AuthViewmodel extends Notifier<AuthState> {
   late final LoginUsecase _loginUsecase;
   late final LogoutUsecase _logoutUsecase;
   late final UploadPhotoUsecase _uploadPhotoUsecase;
+  late final UpdateUsecase _updateUsecase;
 
   @override
   AuthState build() {
     _registerUsecase = ref.read(registerUsecaseProvider);
     _loginUsecase = ref.read(loginUsecaseProvider);
     _logoutUsecase = ref.read(logoutUsecaseProvider);
+    _uploadPhotoUsecase = ref.read(uploadPhotoUsecaseProvider);
+    _updateUsecase = ref.read(updateUsecaseProvider);
     return AuthState();
   }
 
@@ -53,6 +57,44 @@ class AuthViewmodel extends Notifier<AuthState> {
     state = state.copyWith(
       status: AuthStatus.unauthenticated,
       userEntity: null,
+    );
+  }
+
+  Future<void> update({
+    required String fullName,
+    required String email,
+    String? currentPassword,
+    String? newPassword,
+    String? profilePicture,
+  }) async {
+    print('═══════════════════════════════════');
+    print('VIEWMODEL UPDATE');
+    print('Full Name: $fullName');
+    print('Email: $email');
+    print('Current Password: ${currentPassword != null ? "***" : "null"}');
+    print('New Password: ${newPassword != null ? "***" : "null"}');
+    print('Profile Picture: $profilePicture');
+    print('═══════════════════════════════════');
+    state = state.copyWith(status: AuthStatus.loading, errorMessage: null);
+    await Future.delayed(Duration(seconds: 2));
+    final params = UpdateUsecaseParams(
+      fullName: fullName,
+      email: email,
+      currentPassword: currentPassword,
+      newPassword: newPassword,
+      profilePicture: profilePicture,
+    );
+    final result = await _updateUsecase.call(params);
+    result.fold(
+      (failure) {
+        state = state.copyWith(
+          status: AuthStatus.error,
+          errorMessage: failure.message,
+        );
+      },
+      (isUpdated) {
+        state = state.copyWith(status: AuthStatus.updated);
+      },
     );
   }
 

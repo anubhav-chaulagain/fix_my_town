@@ -27,7 +27,7 @@ class UserSessionService {
   Future<void> saveUserSession({
     required String userId,
     required String email,
-    required String role,
+    String? role,
     required String fullname,
     String? profileImage,
   }) async {

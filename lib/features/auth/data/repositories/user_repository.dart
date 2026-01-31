@@ -93,6 +93,24 @@ class UserRepository implements IUserRepository {
   }
 
   @override
+  Future<Either<Failure, bool>> update(UserEntity user) async {
+    try {
+      final userModel = UserApiModel.fromEntity(user);
+      await _userRemoteDatasource.update(userModel);
+      return Right(true);
+    } on DioException catch (e) {
+      return Left(
+        ApiFailure(
+          statusCode: e.response?.statusCode,
+          message: e.response?.data['message'] ?? 'Registration failed',
+        ),
+      );
+    } catch (e) {
+      return Left(ApiFailure(message: e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, bool>> register(UserEntity user) async {
     if (await _networkInfo.isConnected) {
       try {

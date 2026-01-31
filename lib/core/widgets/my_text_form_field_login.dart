@@ -25,6 +25,7 @@ class MyTextFormFieldLogin extends StatelessWidget {
         hintText: text,
         prefixIcon: Icon(icon),
         enabled: !disabled,
+
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12)),
         ),

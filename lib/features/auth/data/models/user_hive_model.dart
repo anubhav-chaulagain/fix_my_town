@@ -20,7 +20,7 @@ class UserHiveModel extends HiveObject {
   final String? password;
 
   @HiveField(4)
-  final String role;
+  final String? role;
 
   @HiveField(5)
   final String? profilePicture;
@@ -33,7 +33,7 @@ class UserHiveModel extends HiveObject {
     required this.fullname,
     required this.email,
     this.password,
-    required this.role,
+    this.role,
     this.profilePicture,
     this.status,
   }) : userId = userId ?? Uuid().v4();

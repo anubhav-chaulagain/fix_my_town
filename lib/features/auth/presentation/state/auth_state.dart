@@ -9,6 +9,7 @@ enum AuthStatus {
   registered,
   error,
   loaded,
+  updated,
 }
 
 class AuthState extends Equatable {

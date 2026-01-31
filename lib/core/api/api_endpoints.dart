@@ -16,6 +16,16 @@ class ApiEndpoints {
   static const String userLogin = "/api/auth/login";
   static const String userRegister = "/api/auth/register";
   static const String userUploadPhoto = '/api/auth/upload-photo';
+  static const String userUpdate = '/api/auth/update-profile';
   // static String userById(String id) => '/users/$id';
   // static String userPhoto(String id) => "/users/$id/photo";
+
+  // Add uploads path
+  static const String uploadsPath = '/public/profile_pictures';
+
+  // Helper method to get full image URL
+  static String getImageUrl(String? filename) {
+    if (filename == null || filename.isEmpty) return '';
+    return '$baseUrl$uploadsPath/$filename';
+  }
 }

@@ -5,7 +5,7 @@ class UserApiModel {
   final String fullName;
   final String email;
   final String? password;
-  final String role;
+  final String? role;
   final String? profilePicture;
   final String? status;
 
@@ -14,7 +14,7 @@ class UserApiModel {
     required this.fullName,
     required this.email,
     this.password,
-    required this.role,
+    this.role,
     this.profilePicture,
     this.status,
   });
@@ -29,6 +29,20 @@ class UserApiModel {
       "status": status,
       "password": password,
     };
+  }
+
+  // Special toJson for update (only include non-null fields)
+  Map<String, dynamic> toJsonForUpdate() {
+    final Map<String, dynamic> data = {"fullname": fullName, "email": email};
+
+    if (password != null && password!.isNotEmpty) {
+      data["password"] = password;
+    }
+    if (profilePicture != null && profilePicture!.isNotEmpty) {
+      data["profilePicture"] = profilePicture;
+    }
+
+    return data;
   }
 
   // from JSON

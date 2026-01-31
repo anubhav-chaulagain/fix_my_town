@@ -36,7 +36,10 @@ class UserRemoteDatasource implements IUserRemoteDatasource {
   Future<String> uploadPhoto(File photo) async {
     final fileName = photo.path.split('/').last;
     final formData = FormData.fromMap({
-      'itemPhoto': await MultipartFile.fromFile(photo.path, filename: fileName),
+      'profilePicture': await MultipartFile.fromFile(
+        photo.path,
+        filename: fileName,
+      ),
     });
     // Get token from token service
     final token = await _tokenService.getToken();
@@ -97,5 +100,45 @@ class UserRemoteDatasource implements IUserRemoteDatasource {
     }
 
     return user;
+  }
+
+  @override
+  Future<UserApiModel> update(UserApiModel user) async {
+    try {
+      final response = await _apiClient.put(
+        ApiEndpoints.userUpdate,
+        data: user.toJsonForUpdate(),
+      );
+
+      print('Response Status: ${response.statusCode}');
+      print('Response Data: ${response.data}');
+
+      if (response.data["success"] == true) {
+        final data = response.data['data'] as Map<String, dynamic>;
+        final updatedUser = UserApiModel.fromJson(data);
+
+        // Update seesion with new data
+        await _userSessionService.saveUserSession(
+          userId: updatedUser.userId!,
+          email: updatedUser.email,
+          fullname: updatedUser.fullName,
+          role: updatedUser.role,
+          profileImage: updatedUser.profilePicture,
+        );
+        return updatedUser;
+      }
+      throw Exception('Update failed: ${response.data["message"]}');
+    } catch (e) {
+      print('═══════════════════════════════════');
+      print('UPDATE ERROR: $e');
+      print('Error Type: ${e.runtimeType}');
+      if (e is DioException) {
+        print('DioException Type: ${e.type}');
+        print('DioException Message: ${e.message}');
+        print('Response Data: ${e.response?.data}');
+      }
+      print('═══════════════════════════════════');
+      rethrow;
+    }
   }
 }

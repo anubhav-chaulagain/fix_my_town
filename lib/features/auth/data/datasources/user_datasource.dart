@@ -24,4 +24,5 @@ abstract interface class IUserRemoteDatasource {
   Future<UserApiModel?> getCurrentUser(String userId);
   Future<bool> logout();
   Future<String> uploadPhoto(File photo);
+  Future<UserApiModel> update(UserApiModel user);
 }

@@ -11,4 +11,5 @@ abstract interface class IUserRepository {
   Future<Either<Failure, bool>> logout();
 
   Future<Either<Failure, String>> uploadPhoto(File photo);
+  Future<Either<Failure, bool>> update(UserEntity user);
 }

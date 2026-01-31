@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fix_my_town/core/api/api_endpoints.dart';
 import 'package:fix_my_town/core/services/storage/user_session_service.dart';
 import 'package:fix_my_town/core/utils/snackbar_utils.dart';
 import 'package:fix_my_town/core/widgets/my_button.dart';
@@ -22,20 +23,97 @@ class _MobileEditProfileScreenState
     extends ConsumerState<MobileEditProfileScreen> {
   final _editProfileKey = GlobalKey<FormState>();
 
-  // Future<void> _handleSubmit() async {
-  //   if (_editProfileKey.currentState!.validate()) {
-  //     final userSessionService = ref.read(userSessionServiceProvider);
-  //     final userId = userSessionService.getUserId();
-  //     final uploadedPhotoUrl = ref.read(authViewmodelProvider).uploadedPhotoUrl;
+  // Initialize with empty strings immediately
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController currPassController = TextEditingController();
+  final TextEditingController newPassController = TextEditingController();
 
-  //     // update user data logic --
+  @override
+  void initState() {
+    super.initState();
+    // Update controllers with user data
+    final userSessionService = ref.read(userSessionServiceProvider);
+    nameController.text = userSessionService.getFullname() ?? '';
+    emailController.text = userSessionService.getUserEmail() ?? '';
 
-  //   }
-  // }
+    // Load existing profile picture
+    _existingProfilePicture = userSessionService.getProfileImage();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    currPassController.dispose();
+    newPassController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleSubmit() async {
+    // if (!_editProfileKey.currentState!.validate()) {
+    //   return;
+    // }
+
+    // Validate password logic
+    final currentPassword = currPassController.text.trim();
+    final newPassword = newPassController.text.trim();
+
+    if (currentPassword.isNotEmpty && newPassword.isEmpty) {
+      SnackbarUtils.showError(context, 'Please enter a new password');
+      return;
+    }
+    if (newPassword.isNotEmpty && currentPassword.isEmpty) {
+      SnackbarUtils.showError(context, 'Please enter your current password');
+      return;
+    }
+
+    try {
+      final userSessionService = ref.read(userSessionServiceProvider);
+      final userId = userSessionService
+          .getUserId(); // Make sure this returns a string
+      final uploadedPhotoUrl = ref.read(authViewmodelProvider).uploadedPhotoUrl;
+
+      // Make sure userId is not null
+      if (userId == null) {
+        SnackbarUtils.showError(context, 'User ID not found');
+        return;
+      }
+
+      // Update user data logic
+      await ref
+          .read(authViewmodelProvider.notifier)
+          .update(
+            fullName: nameController.text.trim(),
+            email: emailController.text.trim(),
+            currentPassword: currentPassword.isNotEmpty
+                ? currentPassword
+                : null,
+            newPassword: newPassword.isNotEmpty ? newPassword : null,
+            profilePicture: uploadedPhotoUrl,
+          );
+
+      if (mounted) {
+        SnackbarUtils.showSuccess(context, 'Profile updated successfully!');
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      debugPrint('Update error: $e'); // Add detailed logging
+      if (mounted) {
+        SnackbarUtils.showError(
+          context,
+          'Failed to update profile: ${e.toString()}',
+        );
+      }
+    }
+  }
 
   // Media selection
   final List<XFile> _selectedMedia = []; // images or video
   final ImagePicker _imagePicker = ImagePicker();
+
+  // Add variable to store existing profile picture URL
+  String? _existingProfilePicture;
 
   Future<bool> _requestPermission(Permission permission) async {
     final status = await permission.status;
@@ -187,23 +265,36 @@ class _MobileEditProfileScreenState
     );
   }
 
+  // Helper method to get the profile image decoration
+  // Add these two helper methods
+  DecorationImage? _getProfileImage() {
+    // Priority: 1. Newly selected image, 2. Existing profile picture, 3. null
+    if (_selectedMedia.isNotEmpty) {
+      return DecorationImage(
+        image: FileImage(File(_selectedMedia[0].path)),
+        fit: BoxFit.cover,
+      );
+    } else if (_existingProfilePicture != null &&
+        _existingProfilePicture!.isNotEmpty) {
+      return DecorationImage(
+        image: NetworkImage(ApiEndpoints.getImageUrl(_existingProfilePicture)),
+        fit: BoxFit.cover,
+      );
+    }
+    return null;
+  }
+
+  Widget? _getProfileChild() {
+    // Only show icon if no image is available
+    if (_selectedMedia.isEmpty &&
+        (_existingProfilePicture == null || _existingProfilePicture!.isEmpty)) {
+      return const Icon(Icons.person_outline, color: Colors.white, size: 40);
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _userSessionService = ref.read(userSessionServiceProvider);
-    final TextEditingController nameController = TextEditingController(
-      text: _userSessionService.getFullname(),
-    );
-
-    final TextEditingController emailController = TextEditingController(
-      text: _userSessionService.getUserEmail(),
-    );
-    final TextEditingController currPassController = TextEditingController(
-      text: "",
-    );
-
-    final TextEditingController newPassController = TextEditingController(
-      text: "",
-    );
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -237,24 +328,19 @@ class _MobileEditProfileScreenState
                           decoration: BoxDecoration(
                             color: const Color(0xFF1EA095),
                             borderRadius: BorderRadius.circular(40),
-                            image: _selectedMedia.isNotEmpty
-                                ? DecorationImage(
-                                    image: FileImage(
-                                      File(_selectedMedia[0].path),
-                                    ),
-                                    fit: BoxFit.cover,
-                                  )
-                                : null,
+                            image: _getProfileImage(), // Use helper method
                           ),
-                          child: _selectedMedia.isEmpty
-                              ? const Icon(
-                                  Icons.person_outline,
-                                  color: Colors.white,
-                                  size: 40,
-                                )
-                              : null,
+                          child: _getProfileChild(), // Use helper method
                         ),
-                        SizedBox(height: 24),
+                        SizedBox(height: 8),
+                        Text(
+                          'Tap to change photo',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        SizedBox(height: 16),
                       ],
                     ),
                   ),
@@ -291,16 +377,7 @@ class _MobileEditProfileScreenState
                   SizedBox(height: 10),
                   MyButton(
                     onPressed: () {
-                      if (_editProfileKey.currentState!.validate()) {
-                        // ref
-                        //     .read(authViewmodelProvider.notifier)
-                        //     .register(
-                        //       fullName: nameController.text,
-                        //       email: emailController.text,
-                        //       password: passController.text,
-                        //       role: "user",
-                        //     );
-                      }
+                      _handleSubmit();
                     },
                     text: "Edit Profile",
                     type: MyButtonType.elevated,

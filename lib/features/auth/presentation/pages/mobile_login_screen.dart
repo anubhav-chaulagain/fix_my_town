@@ -64,6 +64,7 @@ class _MobileLoginScreenState extends ConsumerState<MobileLoginScreen> {
                     text: "xyz@gmail.com",
                     icon: Icons.email,
                     label: "Email",
+                    disabled: false,
                   ),
 
                   MyTextFormFieldLogin(
@@ -71,6 +72,7 @@ class _MobileLoginScreenState extends ConsumerState<MobileLoginScreen> {
                     text: "Enter password",
                     icon: Icons.key,
                     label: "Password",
+                    disabled: false,
                   ),
                   SizedBox(height: 10),
                   MyButton(

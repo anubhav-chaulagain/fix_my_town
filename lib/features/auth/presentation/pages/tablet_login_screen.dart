@@ -84,6 +84,7 @@ class _TabletLoginScreenState extends ConsumerState<TabletLoginScreen> {
                         text: "xyz@gmail.com",
                         icon: Icons.email,
                         label: "Email",
+                        disabled: false,
                       ),
 
                       MyTextFormFieldLogin(
@@ -91,6 +92,7 @@ class _TabletLoginScreenState extends ConsumerState<TabletLoginScreen> {
                         text: "Enter password",
                         icon: Icons.key,
                         label: "Password",
+                        disabled: false,
                       ),
                       SizedBox(height: 10),
                       MyButton(

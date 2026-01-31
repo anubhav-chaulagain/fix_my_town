@@ -1,6 +1,7 @@
 import 'package:fix_my_town/app/theme/app_colors.dart';
 import 'package:fix_my_town/features/auth/presentation/pages/login_screen.dart';
 import 'package:fix_my_town/features/auth/presentation/view_model/auth_viewmodel.dart';
+import 'package:fix_my_town/features/profile/presentation/pages/mobile_edit_profile_screen.dart';
 import 'package:fix_my_town/model/account_item_model.dart';
 import 'package:fix_my_town/core/widgets/my_account_item_card.dart';
 import 'package:flutter/material.dart';
@@ -63,18 +64,28 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
         label: "Edit Profile",
         icon: Icons.person_outline,
         color: Color(0xFF2563EB),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MobileEditProfileScreen(),
+            ),
+          );
+        },
       ),
       AccountItem(
         id: 2,
         label: "Notifications",
         icon: Icons.notifications_outlined,
         color: Color(0xFFF59E0B),
+        onPressed: () {},
       ),
       AccountItem(
         id: 3,
         label: "Location Settings",
         icon: Icons.location_on_outlined,
         color: Color(0xFF059669),
+        onPressed: () {},
       ),
     ];
 
@@ -84,18 +95,21 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
         label: "Privacy Policy",
         icon: Icons.shield_outlined,
         color: const Color(0xFF6B7280),
+        onPressed: () {},
       ),
       AccountItem(
         id: 5,
         label: "Help & Support",
         icon: Icons.help_outline,
         color: const Color(0xFF6B7280),
+        onPressed: () {},
       ),
       AccountItem(
         id: 6,
         label: "Terms of Service",
         icon: Icons.description_outlined,
         color: const Color(0xFF6B7280),
+        onPressed: () {},
       ),
     ];
 

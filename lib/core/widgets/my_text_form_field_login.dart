@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 class MyTextFormFieldLogin extends StatelessWidget {
   const MyTextFormFieldLogin({
     super.key,
-    required this.controllerVal,
     required this.text,
     required this.icon,
     required this.label,
+    required this.controllerVal,
+    required this.disabled,
   });
 
   final TextEditingController controllerVal;
   final String label;
   final String text;
   final IconData icon;
+  final bool disabled;
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,7 @@ class MyTextFormFieldLogin extends StatelessWidget {
         labelText: label,
         hintText: text,
         prefixIcon: Icon(icon),
+        enabled: !disabled,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(12)),
         ),

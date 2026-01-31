@@ -70,12 +70,14 @@ class _MobileSignupScreenState extends ConsumerState<MobileSignupScreen> {
                     text: "Enter full name",
                     icon: Icons.person,
                     label: "Full Name",
+                    disabled: false,
                   ),
                   MyTextFormFieldLogin(
                     controllerVal: emailController,
                     text: "xyz@gmail.com",
                     icon: Icons.email,
                     label: "Email",
+                    disabled: false,
                   ),
 
                   MyTextFormFieldLogin(
@@ -83,12 +85,14 @@ class _MobileSignupScreenState extends ConsumerState<MobileSignupScreen> {
                     text: "Enter password",
                     icon: Icons.key,
                     label: "Password",
+                    disabled: false,
                   ),
                   MyTextFormFieldLogin(
                     controllerVal: conPassController,
                     text: "Retype password",
                     icon: Icons.password,
                     label: "Confirm Password",
+                    disabled: false,
                   ),
                   SizedBox(height: 10),
                   MyButton(

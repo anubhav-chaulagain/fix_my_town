@@ -10,6 +10,7 @@ class MyAccountItemCard extends StatelessWidget {
     return Card(
       color: Colors.white,
       child: ListTile(
+        onTap: item.onPressed,
         contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         leading: CircleAvatar(
           radius: 22,

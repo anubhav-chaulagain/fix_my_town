@@ -51,18 +51,21 @@ class TabletProfileScreen extends StatelessWidget {
         label: "Edit Profile",
         icon: Icons.person_outline,
         color: Color(0xFF2563EB),
+        onPressed: () {},
       ),
       AccountItem(
         id: 2,
         label: "Notifications",
         icon: Icons.notifications_outlined,
         color: Color(0xFFF59E0B),
+        onPressed: () {},
       ),
       AccountItem(
         id: 3,
         label: "Location Settings",
         icon: Icons.location_on_outlined,
         color: Color(0xFF059669),
+        onPressed: () {},
       ),
     ];
 
@@ -72,18 +75,21 @@ class TabletProfileScreen extends StatelessWidget {
         label: "Privacy Policy",
         icon: Icons.shield_outlined,
         color: const Color(0xFF6B7280),
+        onPressed: () {},
       ),
       AccountItem(
         id: 5,
         label: "Help & Support",
         icon: Icons.help_outline,
         color: const Color(0xFF6B7280),
+        onPressed: () {},
       ),
       AccountItem(
         id: 6,
         label: "Terms of Service",
         icon: Icons.description_outlined,
         color: const Color(0xFF6B7280),
+        onPressed: () {},
       ),
     ];
 

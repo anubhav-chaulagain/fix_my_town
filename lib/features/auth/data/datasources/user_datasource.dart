@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fix_my_town/features/auth/data/models/user_api_model.dart';
 import 'package:fix_my_town/features/auth/data/models/user_hive_model.dart';
 
@@ -21,4 +23,5 @@ abstract interface class IUserRemoteDatasource {
   Future<UserApiModel?> login(String email, String password);
   Future<UserApiModel?> getCurrentUser(String userId);
   Future<bool> logout();
+  Future<String> uploadPhoto(File photo);
 }

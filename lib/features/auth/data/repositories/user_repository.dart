@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:fix_my_town/core/error/failures.dart';
@@ -116,6 +118,20 @@ class UserRepository implements IUserRepository {
       } catch (e) {
         return Left(LocalDatabaseFailure(message: e.toString()));
       }
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> uploadPhoto(File photo) async {
+    if (await _networkInfo.isConnected) {
+      try {
+        final url = await _userRemoteDatasource.uploadPhoto(photo);
+        return Right(url);
+      } catch (e) {
+        return Left(ApiFailure(message: e.toString()));
+      }
+    } else {
+      return const Left(NetworkFailure(message: 'No internet connection'));
     }
   }
 

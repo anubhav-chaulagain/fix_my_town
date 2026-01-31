@@ -15,6 +15,7 @@ class ApiEndpoints {
   // static const String users = "/users";
   static const String userLogin = "/api/auth/login";
   static const String userRegister = "/api/auth/register";
+  static const String userUploadPhoto = '/api/auth/upload-photo';
   // static String userById(String id) => '/users/$id';
   // static String userPhoto(String id) => "/users/$id/photo";
 }

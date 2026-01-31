@@ -1,7 +1,7 @@
 import 'package:fix_my_town/app/theme/app_colors.dart';
 import 'package:fix_my_town/features/auth/presentation/pages/login_screen.dart';
 import 'package:fix_my_town/features/auth/presentation/view_model/auth_viewmodel.dart';
-import 'package:fix_my_town/features/profile/presentation/pages/mobile_edit_profile_screen.dart';
+import 'package:fix_my_town/features/auth/presentation/pages/mobile_edit_profile_screen.dart';
 import 'package:fix_my_town/model/account_item_model.dart';
 import 'package:fix_my_town/core/widgets/my_account_item_card.dart';
 import 'package:flutter/material.dart';

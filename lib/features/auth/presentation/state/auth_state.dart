@@ -8,28 +8,36 @@ enum AuthStatus {
   unauthenticated,
   registered,
   error,
+  loaded,
 }
 
 class AuthState extends Equatable {
   final AuthStatus status;
   final UserEntity? userEntity;
   final String? errorMessage;
+  final String? uploadedPhotoUrl;
 
   const AuthState({
     this.status = AuthStatus.initial,
     this.userEntity,
     this.errorMessage,
+    this.uploadedPhotoUrl,
   });
 
   AuthState copyWith({
     AuthStatus? status,
     UserEntity? userEntity,
     String? errorMessage,
+    String? uploadedPhotoUrl,
+    bool resetUploadedPhotoUrl = false,
   }) {
     return AuthState(
       status: status ?? this.status,
       userEntity: userEntity ?? this.userEntity,
       errorMessage: errorMessage,
+      uploadedPhotoUrl: resetUploadedPhotoUrl
+          ? null
+          : (uploadedPhotoUrl ?? this.uploadedPhotoUrl),
     );
   }
 

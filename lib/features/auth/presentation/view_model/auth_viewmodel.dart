@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:fix_my_town/features/auth/domain/usecases/login_usecase.dart';
 import 'package:fix_my_town/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:fix_my_town/features/auth/domain/usecases/register_usecase.dart';
+import 'package:fix_my_town/features/auth/domain/usecases/upload_photo_usecase.dart';
 import 'package:fix_my_town/features/auth/presentation/state/auth_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,6 +15,7 @@ class AuthViewmodel extends Notifier<AuthState> {
   late final RegisterUsecase _registerUsecase;
   late final LoginUsecase _loginUsecase;
   late final LogoutUsecase _logoutUsecase;
+  late final UploadPhotoUsecase _uploadPhotoUsecase;
 
   @override
   AuthState build() {
@@ -19,6 +23,29 @@ class AuthViewmodel extends Notifier<AuthState> {
     _loginUsecase = ref.read(loginUsecaseProvider);
     _logoutUsecase = ref.read(logoutUsecaseProvider);
     return AuthState();
+  }
+
+  Future<String?> uploadPhoto(File photo) async {
+    state = state.copyWith(status: AuthStatus.loading);
+
+    final result = await _uploadPhotoUsecase(photo);
+
+    return result.fold(
+      (failure) {
+        state = state.copyWith(
+          status: AuthStatus.error,
+          errorMessage: failure.message,
+        );
+        return null;
+      },
+      (url) {
+        state = state.copyWith(
+          status: AuthStatus.loaded,
+          uploadedPhotoUrl: url,
+        );
+        return url;
+      },
+    );
   }
 
   Future<void> logout() async {

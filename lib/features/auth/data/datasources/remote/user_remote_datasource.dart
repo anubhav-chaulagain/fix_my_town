@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:fix_my_town/core/api/api_client.dart';
 import 'package:fix_my_town/core/api/api_endpoints.dart';
+import 'package:fix_my_town/core/services/storage/token_service.dart';
 import 'package:fix_my_town/core/services/storage/user_session_service.dart';
 import 'package:fix_my_town/features/auth/data/datasources/user_datasource.dart';
 import 'package:fix_my_town/features/auth/data/models/user_api_model.dart';
@@ -11,18 +15,39 @@ final userRemoteDatasourceProvider = Provider<UserRemoteDatasource>((ref) {
   return UserRemoteDatasource(
     apiClient: ref.read(apiClientProvider),
     userSessionService: userSessionService,
+    tokenService: ref.read(tokenServiceProvider),
   );
 });
 
 class UserRemoteDatasource implements IUserRemoteDatasource {
   final ApiClient _apiClient;
   final UserSessionService _userSessionService;
+  final TokenService _tokenService;
 
   UserRemoteDatasource({
     required ApiClient apiClient,
     required UserSessionService userSessionService,
+    required TokenService tokenService,
   }) : _apiClient = apiClient,
-       _userSessionService = userSessionService;
+       _userSessionService = userSessionService,
+       _tokenService = tokenService;
+
+  @override
+  Future<String> uploadPhoto(File photo) async {
+    final fileName = photo.path.split('/').last;
+    final formData = FormData.fromMap({
+      'itemPhoto': await MultipartFile.fromFile(photo.path, filename: fileName),
+    });
+    // Get token from token service
+    final token = await _tokenService.getToken();
+    final response = await _apiClient.uploadFile(
+      ApiEndpoints.userUploadPhoto,
+      formData: formData,
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    return response.data['data'];
+  }
 
   @override
   Future<UserApiModel?> getCurrentUser(String userId) {

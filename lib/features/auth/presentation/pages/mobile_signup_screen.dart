@@ -102,7 +102,7 @@ class _MobileSignupScreenState extends ConsumerState<MobileSignupScreen> {
                               fullName: nameController.text,
                               email: emailController.text,
                               password: passController.text,
-                              role: "user",
+                              role: "citizen",
                             );
                       }
                     },

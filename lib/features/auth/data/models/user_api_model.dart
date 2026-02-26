@@ -82,16 +82,17 @@ class UserApiModel {
       password: json["password"],
       role: json["role"],
       profilePicture: json["profilePicture"],
-      totalReports: json["totalReports"],
-      pendingReports: json["pendingReports"],
-      resolvedReports: json["resolvedReports"],
-      inprogressReports: json["inprogressReports"],
+      totalReports: json["totalReports"]?.toString(),
+      pendingReports: json["pendingReports"]?.toString(),
+      resolvedReports: json["resolvedReports"]?.toString(),
+      inprogressReports: json["inprogressReports"]?.toString(),
       department: json["department"],
       employeeId: json["employeeId"],
-      assinedIssuesCount: json["assinedIssuesCount"],
-      completedIssuesCount: json["completedIssuesCount"],
+      assinedIssuesCount: json["assignedIssuesCount"]
+          ?.toString(), // note: API uses "assignedIssuesCount"
+      completedIssuesCount: json["completedIssuesCount"]?.toString(),
       phoneNumber: json["phoneNumber"],
-      isActive: json["isActive"],
+      isActive: json["isActive"]?.toString(),
     );
   }
 

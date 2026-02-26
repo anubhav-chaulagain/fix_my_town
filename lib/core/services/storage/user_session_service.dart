@@ -17,7 +17,6 @@ class UserSessionService {
 
   // keys for storing data
   static const String _keyIsLoggedIn = 'is_logged_in';
-  static const String _keyUserId = 'user_id';
   static const String _keyUserEmail = 'user_email';
   static const String _keyUserFullname = 'user_fullname';
   static const String _keyRole = 'user_role';
@@ -25,17 +24,15 @@ class UserSessionService {
 
   // Store user session data
   Future<void> saveUserSession({
-    required String userId,
     required String email,
     String? role,
-    required String fullname,
+    required String? fullname,
     String? profileImage,
   }) async {
     await _prefs.setBool(_keyIsLoggedIn, true);
-    await _prefs.setString(_keyUserId, userId);
     await _prefs.setString(_keyUserEmail, email);
     await _prefs.setString(_keyRole, "$role");
-    await _prefs.setString(_keyUserFullname, fullname);
+    await _prefs.setString(_keyUserFullname, fullname ?? "");
     if (profileImage != null) {
       await _prefs.setString(_keyProfileImage, profileImage);
     }
@@ -44,7 +41,6 @@ class UserSessionService {
   // Clear user session data
   Future<void> clearUserSession() async {
     await _prefs.remove(_keyIsLoggedIn);
-    await _prefs.remove(_keyUserId);
     await _prefs.remove(_keyUserEmail);
     await _prefs.remove(_keyRole);
     await _prefs.remove(_keyUserFullname);
@@ -53,10 +49,6 @@ class UserSessionService {
 
   bool isLoggedIn() {
     return _prefs.getBool(_keyIsLoggedIn) ?? false;
-  }
-
-  String? getUserId() {
-    return _prefs.getString(_keyUserId);
   }
 
   String? getUserEmail() {

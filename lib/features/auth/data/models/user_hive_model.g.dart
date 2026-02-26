@@ -17,34 +17,58 @@ class UserHiveModelAdapter extends TypeAdapter<UserHiveModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return UserHiveModel(
-      userId: fields[0] as String?,
-      fullname: fields[1] as String,
-      email: fields[2] as String,
-      password: fields[3] as String?,
-      role: fields[4] as String?,
-      profilePicture: fields[5] as String?,
-      status: fields[6] as String?,
+      fullname: fields[0] as String?,
+      email: fields[1] as String,
+      password: fields[2] as String?,
+      role: fields[3] as String?,
+      profilePicture: fields[4] as String?,
+      totalReports: fields[5] as String?,
+      pendingReports: fields[6] as String?,
+      resolvedReports: fields[7] as String?,
+      inprogressReports: fields[8] as String?,
+      department: fields[9] as String?,
+      employeeId: fields[10] as String?,
+      assinedIssuesCount: fields[11] as String?,
+      completedIssuesCount: fields[12] as String?,
+      phoneNumber: fields[13] as String?,
+      isActive: fields[14] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, UserHiveModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(15)
       ..writeByte(0)
-      ..write(obj.userId)
-      ..writeByte(1)
       ..write(obj.fullname)
-      ..writeByte(2)
+      ..writeByte(1)
       ..write(obj.email)
-      ..writeByte(3)
+      ..writeByte(2)
       ..write(obj.password)
-      ..writeByte(4)
+      ..writeByte(3)
       ..write(obj.role)
-      ..writeByte(5)
+      ..writeByte(4)
       ..write(obj.profilePicture)
+      ..writeByte(5)
+      ..write(obj.totalReports)
       ..writeByte(6)
-      ..write(obj.status);
+      ..write(obj.pendingReports)
+      ..writeByte(7)
+      ..write(obj.resolvedReports)
+      ..writeByte(8)
+      ..write(obj.inprogressReports)
+      ..writeByte(9)
+      ..write(obj.department)
+      ..writeByte(10)
+      ..write(obj.employeeId)
+      ..writeByte(11)
+      ..write(obj.assinedIssuesCount)
+      ..writeByte(12)
+      ..write(obj.completedIssuesCount)
+      ..writeByte(13)
+      ..write(obj.phoneNumber)
+      ..writeByte(14)
+      ..write(obj.isActive);
   }
 
   @override

@@ -1,66 +1,113 @@
 import 'package:fix_my_town/core/constants/hive_table_constants.dart';
 import 'package:fix_my_town/features/auth/domain/entities/user_entity.dart';
 import 'package:hive/hive.dart';
-import 'package:uuid/uuid.dart';
 
 part 'user_hive_model.g.dart';
 
 @HiveType(typeId: HiveTableConstant.userTypeId)
 class UserHiveModel extends HiveObject {
   @HiveField(0)
-  final String? userId;
+  final String? fullname;
 
   @HiveField(1)
-  final String fullname;
-
-  @HiveField(2)
   final String email;
 
-  @HiveField(3)
+  @HiveField(2)
   final String? password;
 
-  @HiveField(4)
+  @HiveField(3)
   final String? role;
 
-  @HiveField(5)
+  @HiveField(4)
   final String? profilePicture;
 
+  @HiveField(5)
+  final String? totalReports;
+
   @HiveField(6)
-  final String? status;
+  final String? pendingReports;
+
+  @HiveField(7)
+  final String? resolvedReports;
+
+  @HiveField(8)
+  final String? inprogressReports;
+
+  @HiveField(9)
+  final String? department;
+
+  @HiveField(10)
+  final String? employeeId;
+
+  @HiveField(11)
+  final String? assinedIssuesCount;
+
+  @HiveField(12)
+  final String? completedIssuesCount;
+
+  @HiveField(13)
+  final String? phoneNumber;
+
+  @HiveField(14)
+  final String? isActive;
 
   UserHiveModel({
-    String? userId,
-    required this.fullname,
+    this.fullname,
     required this.email,
     this.password,
     this.role,
     this.profilePicture,
-    this.status,
-  }) : userId = userId ?? Uuid().v4();
+    this.totalReports,
+    this.pendingReports,
+    this.resolvedReports,
+    this.inprogressReports,
+    this.department,
+    this.employeeId,
+    this.assinedIssuesCount,
+    this.completedIssuesCount,
+    this.phoneNumber,
+    this.isActive,
+  });
 
   // Convert model to auth entity
   UserEntity toEntity() {
     return UserEntity(
-      userId: userId,
       fullName: fullname,
       email: email,
       password: password,
       role: role,
       profilePicture: profilePicture,
-      status: status,
+      totalReports: totalReports,
+      pendingReports: pendingReports,
+      resolvedReports: resolvedReports,
+      inprogressReports: inprogressReports,
+      department: department,
+      employeeId: employeeId,
+      assinedIssuesCount: assinedIssuesCount,
+      completedIssuesCount: completedIssuesCount,
+      phoneNumber: phoneNumber,
+      isActive: isActive,
     );
   }
 
   // Convert auth entity to model
   factory UserHiveModel.fromEntity(UserEntity entity) {
     return UserHiveModel(
-      userId: entity.userId,
       fullname: entity.fullName,
       email: entity.email,
       password: entity.password,
       role: entity.role,
       profilePicture: entity.profilePicture,
-      status: entity.status,
+      totalReports: entity.totalReports,
+      pendingReports: entity.pendingReports,
+      resolvedReports: entity.resolvedReports,
+      inprogressReports: entity.inprogressReports,
+      department: entity.department,
+      employeeId: entity.employeeId,
+      assinedIssuesCount: entity.assinedIssuesCount,
+      completedIssuesCount: entity.completedIssuesCount,
+      phoneNumber: entity.phoneNumber,
+      isActive: entity.isActive,
     );
   }
 

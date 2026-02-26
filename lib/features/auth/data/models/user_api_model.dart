@@ -1,22 +1,42 @@
 import 'package:fix_my_town/features/auth/domain/entities/user_entity.dart';
 
 class UserApiModel {
-  final String? userId;
-  final String fullName;
+  final String? fullName;
   final String email;
   final String? password;
   final String? role;
   final String? profilePicture;
-  final String? status;
+
+  // Citizen stats
+  final String? totalReports;
+  final String? pendingReports;
+  final String? resolvedReports;
+  final String? inprogressReports;
+
+  // Authority stats
+  final String? department;
+  final String? employeeId;
+  final String? assinedIssuesCount;
+  final String? completedIssuesCount;
+  final String? phoneNumber;
+  final String? isActive;
 
   UserApiModel({
-    this.userId,
-    required this.fullName,
+    this.fullName,
     required this.email,
     this.password,
     this.role,
     this.profilePicture,
-    this.status,
+    this.totalReports,
+    this.pendingReports,
+    this.resolvedReports,
+    this.inprogressReports,
+    this.department,
+    this.employeeId,
+    this.assinedIssuesCount,
+    this.completedIssuesCount,
+    this.phoneNumber,
+    this.isActive,
   });
 
   // to JSON
@@ -24,10 +44,19 @@ class UserApiModel {
     return {
       "fullname": fullName,
       "email": email,
+      "password": password,
       "role": role,
       "profilePicture": profilePicture,
-      "status": status,
-      "password": password,
+      "totalReports": totalReports,
+      "pendingReports": pendingReports,
+      "resolvedReports": resolvedReports,
+      "inprogressReports": inprogressReports,
+      "department": department,
+      "employeeId": employeeId,
+      "assinedIssuesCount": assinedIssuesCount,
+      "completedIssuesCount": completedIssuesCount,
+      "phoneNumber": phoneNumber,
+      "isActive": isActive,
     };
   }
 
@@ -48,38 +77,63 @@ class UserApiModel {
   // from JSON
   factory UserApiModel.fromJson(Map<String, dynamic> json) {
     return UserApiModel(
-      userId: json["_id"],
       fullName: json["fullname"],
       email: json["email"],
-      role: json["role"] ?? 'citizen',
+      password: json["password"],
+      role: json["role"],
       profilePicture: json["profilePicture"],
-      status: json["status"],
+      totalReports: json["totalReports"],
+      pendingReports: json["pendingReports"],
+      resolvedReports: json["resolvedReports"],
+      inprogressReports: json["inprogressReports"],
+      department: json["department"],
+      employeeId: json["employeeId"],
+      assinedIssuesCount: json["assinedIssuesCount"],
+      completedIssuesCount: json["completedIssuesCount"],
+      phoneNumber: json["phoneNumber"],
+      isActive: json["isActive"],
     );
   }
 
   // to Entity
   UserEntity toEntity() {
     return UserEntity(
-      userId: userId,
       fullName: fullName,
       email: email,
       password: password,
       role: role,
       profilePicture: profilePicture,
-      status: status,
+      totalReports: totalReports,
+      pendingReports: pendingReports,
+      resolvedReports: resolvedReports,
+      inprogressReports: inprogressReports,
+      department: department,
+      employeeId: employeeId,
+      assinedIssuesCount: assinedIssuesCount,
+      completedIssuesCount: completedIssuesCount,
+      phoneNumber: phoneNumber,
+      isActive: isActive,
     );
   }
 
   // from Entity
   factory UserApiModel.fromEntity(UserEntity entity) {
     return UserApiModel(
-      userId: entity.userId,
       fullName: entity.fullName,
       email: entity.email,
       password: entity.password,
       role: entity.role,
       profilePicture: entity.profilePicture,
-      status: entity.status,
+      totalReports: entity.totalReports,
+      pendingReports: entity.pendingReports,
+      resolvedReports: entity.resolvedReports,
+      inprogressReports: entity.inprogressReports,
+      department: entity.department,
+      employeeId: entity.employeeId,
+      assinedIssuesCount: entity.assinedIssuesCount,
+      completedIssuesCount: entity.completedIssuesCount,
+      phoneNumber: entity.phoneNumber,
+      isActive: entity.isActive,
     );
   }
 }

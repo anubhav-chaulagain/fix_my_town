@@ -108,7 +108,7 @@ class HiveService {
 
   // Register a new user
   Future<UserHiveModel> register(UserHiveModel user) async {
-    await _authBox.put(user.userId, user);
+    await _authBox.put(user.email, user);
     return user;
   }
 
@@ -127,8 +127,8 @@ class HiveService {
   Future<void> logout() async {}
 
   // get current user
-  UserHiveModel? getCurrentUser(String userId) {
-    return _authBox.get(userId);
+  UserHiveModel? getCurrentUser(String email) {
+    return _authBox.get(email);
   }
 
   // if email exists

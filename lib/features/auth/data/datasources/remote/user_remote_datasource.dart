@@ -70,10 +70,10 @@ class UserRemoteDatasource implements IUserRemoteDatasource {
       final user = UserApiModel.fromJson(data);
       // info: Save user session
       await _userSessionService.saveUserSession(
-        userId: user.userId!,
         email: user.email,
-        fullname: user.fullName,
+        fullname: user.fullName!,
         role: user.role,
+        profileImage: user.profilePicture,
       );
       return user;
     }
@@ -119,9 +119,8 @@ class UserRemoteDatasource implements IUserRemoteDatasource {
 
         // Update seesion with new data
         await _userSessionService.saveUserSession(
-          userId: updatedUser.userId!,
           email: updatedUser.email,
-          fullname: updatedUser.fullName,
+          fullname: updatedUser.fullName!,
           role: updatedUser.role,
           profileImage: updatedUser.profilePicture,
         );

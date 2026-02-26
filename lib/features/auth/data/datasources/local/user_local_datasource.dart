@@ -34,10 +34,9 @@ class AuthLocalDatasource implements IUserLocalDatasource {
       final user = await _hiveService.login(email, password);
       if (user != null) {
         await _userSessionService.saveUserSession(
-          userId: user.userId!,
           email: user.email,
+          fullname: user.fullname!,
           role: user.role,
-          fullname: user.fullname,
           profileImage: user.profilePicture,
         );
       }

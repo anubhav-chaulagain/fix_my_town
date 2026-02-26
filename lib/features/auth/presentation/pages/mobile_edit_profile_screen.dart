@@ -70,12 +70,12 @@ class _MobileEditProfileScreenState
 
     try {
       final userSessionService = ref.read(userSessionServiceProvider);
-      final userId = userSessionService
-          .getUserId(); // Make sure this returns a string
+      final userEmail = userSessionService
+          .getUserEmail(); // Make sure this returns a string
       final uploadedPhotoUrl = ref.read(authViewmodelProvider).uploadedPhotoUrl;
 
-      // Make sure userId is not null
-      if (userId == null) {
+      // Make sure userEmail is not null
+      if (userEmail == null) {
         SnackbarUtils.showError(context, 'User ID not found');
         return;
       }

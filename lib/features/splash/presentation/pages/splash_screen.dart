@@ -1,7 +1,7 @@
 import 'package:fix_my_town/core/services/storage/user_session_service.dart';
 import 'package:fix_my_town/screens/dashboard_screen.dart';
-import 'package:fix_my_town/screens/mobile_screens/mobile_splash_screen.dart';
-import 'package:fix_my_town/screens/tablet_screens/tablet_splash_screen.dart';
+import 'package:fix_my_town/features/splash/presentation/pages/mobile_splash_screen.dart';
+import 'package:fix_my_town/features/splash/presentation/pages/tablet_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

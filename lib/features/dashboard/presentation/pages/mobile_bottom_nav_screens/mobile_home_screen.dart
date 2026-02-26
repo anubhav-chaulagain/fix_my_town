@@ -2,10 +2,17 @@ import 'package:fix_my_town/model/category_model.dart';
 import 'package:fix_my_town/core/widgets/my_category_card.dart';
 import 'package:fix_my_town/core/widgets/my_issue_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class MobileHomeScreen extends StatelessWidget {
+class MobileHomeScreen extends ConsumerStatefulWidget {
   const MobileHomeScreen({super.key});
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _MobileHomeScreenState();
+}
+
+class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
   @override
   Widget build(BuildContext context) {
     final List<Map<String, String>> issueCards = [
@@ -84,6 +91,7 @@ class MobileHomeScreen extends StatelessWidget {
 
     return SafeArea(
       child: SingleChildScrollView(
+        padding: const EdgeInsets.only(bottom: 50),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -115,6 +115,7 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
 
     return SafeArea(
       child: Container(
+        padding: const EdgeInsets.only(bottom: 20),
         width: double.infinity,
         margin: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
         child: SingleChildScrollView(

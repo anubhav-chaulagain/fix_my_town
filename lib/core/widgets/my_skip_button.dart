@@ -1,3 +1,5 @@
+import 'package:fix_my_town/app/routes/app_routes.dart';
+import 'package:fix_my_town/features/auth/presentation/pages/signup_screen.dart';
 import 'package:flutter/material.dart';
 
 class MySkipButton extends StatelessWidget {
@@ -10,7 +12,9 @@ class MySkipButton extends StatelessWidget {
       right: 0,
       child: SizedBox(
         child: TextButton(
-          onPressed: () {},
+          onPressed: () {
+            AppRoutes.pushAndRemoveUntil(context, SignupScreen());
+          },
           style: ElevatedButton.styleFrom(),
           child: Text(
             "Skip",

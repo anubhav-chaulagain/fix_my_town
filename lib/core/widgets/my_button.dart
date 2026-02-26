@@ -41,7 +41,7 @@ class MyButton extends StatelessWidget {
         return SizedBox(
           width: width ?? double.infinity,
           child: OutlinedButton(
-            onPressed: () {},
+            onPressed: onPressed,
             style: OutlinedButton.styleFrom(
               side: BorderSide(color: const Color(0xFF1EA095), width: 2),
               shape: RoundedRectangleBorder(

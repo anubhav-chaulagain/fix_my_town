@@ -1,3 +1,4 @@
+import 'package:fix_my_town/app/routes/app_routes.dart';
 import 'package:fix_my_town/features/auth/presentation/pages/login_screen.dart';
 import 'package:fix_my_town/core/widgets/my_button.dart';
 import 'package:fix_my_town/features/onboarding/presentation/pages/onboarding_screen.dart';
@@ -53,24 +54,14 @@ class MobileSplashScreen extends StatelessWidget {
                     children: [
                       MyButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const OnboardingScreen(),
-                            ),
-                          );
+                          AppRoutes.push(context, OnboardingScreen());
                         },
                         text: "Get Started",
                         type: MyButtonType.outlined,
                       ),
                       MyButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                            ),
-                          );
+                          AppRoutes.push(context, LoginScreen());
                         },
                         text: "Login",
                         type: MyButtonType.elevated,

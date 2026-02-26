@@ -1,3 +1,4 @@
+import 'package:fix_my_town/app/routes/app_routes.dart';
 import 'package:fix_my_town/features/auth/presentation/pages/signup_screen.dart';
 import 'package:fix_my_town/core/widgets/my_onboarding_card_label.dart';
 import 'package:flutter/material.dart';
@@ -171,10 +172,7 @@ class TabletOnboardingScreen extends StatelessWidget {
 
             TextButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SignupScreen()),
-                );
+                AppRoutes.pushAndRemoveUntil(context, SignupScreen());
               },
               child: Text(
                 "Get Started",

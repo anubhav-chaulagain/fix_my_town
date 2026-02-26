@@ -1,5 +1,5 @@
-import 'package:fix_my_town/screens/mobile_screens/mobile_onboarding_screen_one.dart';
-import 'package:fix_my_town/screens/tablet_screens/tablet_onboarding_screen.dart';
+import 'package:fix_my_town/features/onboarding/presentation/pages/mobile_onboarding_screen_one.dart';
+import 'package:fix_my_town/features/onboarding/presentation/pages/tablet_onboarding_screen.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingScreen extends StatelessWidget {

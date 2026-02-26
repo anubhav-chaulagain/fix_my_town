@@ -1,5 +1,6 @@
-import 'package:fix_my_town/screens/mobile_screens/mobile_onboarding_screen_one.dart';
+import 'package:fix_my_town/features/auth/presentation/pages/login_screen.dart';
 import 'package:fix_my_town/core/widgets/my_button.dart';
+import 'package:fix_my_town/features/onboarding/presentation/pages/onboarding_screen.dart';
 import 'package:flutter/material.dart';
 
 class MobileSplashScreen extends StatelessWidget {
@@ -51,7 +52,14 @@ class MobileSplashScreen extends StatelessWidget {
                     spacing: 16,
                     children: [
                       MyButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const OnboardingScreen(),
+                            ),
+                          );
+                        },
                         text: "Get Started",
                         type: MyButtonType.outlined,
                       ),
@@ -60,8 +68,7 @@ class MobileSplashScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                                  const MobileOnboardingScreenOne(),
+                              builder: (context) => const LoginScreen(),
                             ),
                           );
                         },

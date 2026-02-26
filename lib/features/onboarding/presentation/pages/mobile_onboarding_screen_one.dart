@@ -1,4 +1,4 @@
-import 'package:fix_my_town/screens/mobile_screens/mobile_onboarding_screen_two.dart';
+import 'package:fix_my_town/features/onboarding/presentation/pages/mobile_onboarding_screen_two.dart';
 import 'package:fix_my_town/core/widgets/my_button.dart';
 import 'package:fix_my_town/core/widgets/my_skip_button.dart';
 import 'package:flutter/material.dart';

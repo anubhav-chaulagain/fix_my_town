@@ -1,4 +1,5 @@
-import 'package:fix_my_town/screens/onboarding_screen.dart';
+import 'package:fix_my_town/features/auth/presentation/pages/login_screen.dart';
+import 'package:fix_my_town/features/onboarding/presentation/pages/onboarding_screen.dart';
 import 'package:fix_my_town/core/widgets/my_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -81,7 +82,15 @@ class TabletSplashScreen extends StatelessWidget {
                             Row(
                               children: [
                                 MyButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const OnboardingScreen(),
+                                      ),
+                                    );
+                                  },
                                   text: "Get Started",
                                   type: MyButtonType.outlined,
                                   width: 200,
@@ -93,7 +102,7 @@ class TabletSplashScreen extends StatelessWidget {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            const OnboardingScreen(),
+                                            const LoginScreen(),
                                       ),
                                     );
                                   },

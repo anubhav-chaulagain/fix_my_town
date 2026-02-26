@@ -1,6 +1,6 @@
-import 'package:fix_my_town/screens/mobile_screens/mobile_bottom_nav_screens/mobile_home_screen.dart';
-import 'package:fix_my_town/screens/mobile_screens/mobile_bottom_nav_screens/mobile_my_reports_screen.dart';
-import 'package:fix_my_town/screens/mobile_screens/mobile_bottom_nav_screens/mobile_profile_screen.dart';
+import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_bottom_nav_screens/mobile_home_screen.dart';
+import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_bottom_nav_screens/mobile_my_reports_screen.dart';
+import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_bottom_nav_screens/mobile_profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class MobileDashboardScreen extends StatefulWidget {

@@ -1,5 +1,5 @@
-import 'package:fix_my_town/screens/mobile_screens/mobile_dashboard_screen.dart';
-import 'package:fix_my_town/screens/tablet_screens/tablet_dashboard_screen.dart';
+import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_dashboard_screen.dart';
+import 'package:fix_my_town/features/dashboard/presentation/pages/tablet_dashboard_screen.dart';
 import 'package:flutter/material.dart';
 
 class DashboardScreen extends StatelessWidget {

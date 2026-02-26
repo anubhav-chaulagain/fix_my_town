@@ -1,6 +1,6 @@
-import 'package:fix_my_town/screens/tablet_screens/tablet_bottom_nav_screens/tablet_home_screen.dart';
-import 'package:fix_my_town/screens/tablet_screens/tablet_bottom_nav_screens/tablet_my_reports_screen.dart';
-import 'package:fix_my_town/screens/tablet_screens/tablet_bottom_nav_screens/tablet_profile_screen.dart';
+import 'package:fix_my_town/features/dashboard/presentation/pages/tablet_bottom_nav_screens/tablet_home_screen.dart';
+import 'package:fix_my_town/features/dashboard/presentation/pages/tablet_bottom_nav_screens/tablet_my_reports_screen.dart';
+import 'package:fix_my_town/features/dashboard/presentation/pages/tablet_bottom_nav_screens/tablet_profile_screen.dart';
 import 'package:flutter/material.dart';
 
 class TabletDashboardScreen extends StatefulWidget {

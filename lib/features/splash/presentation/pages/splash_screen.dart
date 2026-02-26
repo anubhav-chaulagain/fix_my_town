@@ -1,5 +1,5 @@
 import 'package:fix_my_town/core/services/storage/user_session_service.dart';
-import 'package:fix_my_town/screens/dashboard_screen.dart';
+import 'package:fix_my_town/features/dashboard/presentation/pages/dashboard_screen.dart';
 import 'package:fix_my_town/features/splash/presentation/pages/mobile_splash_screen.dart';
 import 'package:fix_my_town/features/splash/presentation/pages/tablet_splash_screen.dart';
 import 'package:flutter/material.dart';

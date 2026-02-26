@@ -1,4 +1,6 @@
+import 'package:fix_my_town/app/routes/app_routes.dart';
 import 'package:fix_my_town/core/utils/snackbar_utils.dart';
+import 'package:fix_my_town/features/auth/presentation/pages/signup_screen.dart';
 import 'package:fix_my_town/features/auth/presentation/state/auth_state.dart';
 import 'package:fix_my_town/features/auth/presentation/view_model/auth_viewmodel.dart';
 import 'package:fix_my_town/screens/dashboard_screen.dart';
@@ -88,6 +90,12 @@ class _MobileLoginScreenState extends ConsumerState<MobileLoginScreen> {
                     },
                     text: "Login",
                     type: MyButtonType.elevated,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      AppRoutes.pushAndRemoveUntil(context, SignupScreen());
+                    },
+                    child: Text("Don't have an account?"),
                   ),
                 ],
               ),

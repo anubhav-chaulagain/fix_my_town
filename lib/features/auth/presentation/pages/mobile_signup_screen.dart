@@ -1,3 +1,4 @@
+import 'package:fix_my_town/app/routes/app_routes.dart';
 import 'package:fix_my_town/core/utils/snackbar_utils.dart';
 import 'package:fix_my_town/features/auth/presentation/state/auth_state.dart';
 import 'package:fix_my_town/features/auth/presentation/view_model/auth_viewmodel.dart';
@@ -40,10 +41,7 @@ class _MobileSignupScreenState extends ConsumerState<MobileSignupScreen> {
           context,
           "Registration Successful! Please Login.",
         );
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
-        );
+        AppRoutes.pushAndRemoveUntil(context, LoginScreen());
       }
     });
     return Scaffold(
@@ -113,12 +111,7 @@ class _MobileSignupScreenState extends ConsumerState<MobileSignupScreen> {
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                      );
+                      AppRoutes.pushAndRemoveUntil(context, LoginScreen());
                     },
                     child: Text("Already have an account?"),
                   ),

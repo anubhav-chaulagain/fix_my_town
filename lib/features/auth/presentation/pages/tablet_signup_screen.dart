@@ -1,3 +1,4 @@
+import 'package:fix_my_town/app/routes/app_routes.dart';
 import 'package:fix_my_town/core/utils/snackbar_utils.dart';
 import 'package:fix_my_town/features/auth/presentation/state/auth_state.dart';
 import 'package:fix_my_town/features/auth/presentation/view_model/auth_viewmodel.dart';
@@ -36,10 +37,7 @@ class _TabletSignupScreenState extends ConsumerState<TabletSignupScreen> {
         );
       } else if (next.status == AuthStatus.registered) {
         SnackbarUtils.showSuccess(context, "Logged In Successfully!");
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
-        );
+        AppRoutes.pushAndRemoveUntil(context, LoginScreen());
       }
     });
     return Scaffold(

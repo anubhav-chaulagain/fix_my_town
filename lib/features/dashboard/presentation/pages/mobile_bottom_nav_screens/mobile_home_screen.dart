@@ -1,10 +1,12 @@
 // mobile_home_screen.dart
+import 'package:fix_my_town/app/routes/app_routes.dart';
 import 'package:fix_my_town/core/api/api_client.dart';
 import 'package:fix_my_town/core/api/api_endpoints.dart';
 import 'package:fix_my_town/core/services/storage/user_session_service.dart';
 import 'package:fix_my_town/core/widgets/my_category_card.dart';
 import 'package:fix_my_town/core/widgets/my_issue_card.dart';
 import 'package:fix_my_town/features/issues/data/models/issues_api_model.dart';
+import 'package:fix_my_town/features/issues/presentation/pages/mobile_report_issue_screen.dart';
 import 'package:fix_my_town/model/category_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -140,8 +142,28 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
                               mainAxisSpacing: spacing,
                             ),
                         itemCount: _categories.length,
-                        itemBuilder: (context, index) =>
-                            MyCategoryCard(category: _categories[index]),
+                        itemBuilder: (context, index) {
+                          final category = _categories[index];
+
+                          // Map display name → backend category value
+                          final categoryMap = {
+                            'Garbage': 'Garbage',
+                            'Road Damage': 'Pothole',
+                            'Street Lights': 'Broken Streetlight',
+                            'Water': 'Water Leakage',
+                          };
+
+                          return GestureDetector(
+                            onTap: () => AppRoutes.push(
+                              context,
+                              MobileReportIssueScreen(
+                                initialCategory:
+                                    categoryMap[category.name] ?? category.name,
+                              ),
+                            ),
+                            child: MyCategoryCard(category: category),
+                          );
+                        },
                       ),
                     );
                   },
@@ -234,7 +256,8 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
                       address: issue.location ?? 'Unknown location',
                       img: imageUrl,
                       status: issue.status ?? 'open',
-                      issueDate: issue.resolvedAt ?? '',
+                      issueDate: issue.createdAt ?? issue.resolvedAt ?? '',
+                      description: issue.description,
                     );
                   },
                 ),

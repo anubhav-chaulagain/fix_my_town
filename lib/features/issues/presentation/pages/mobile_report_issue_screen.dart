@@ -1,4 +1,4 @@
-// report_issue_screen.dart
+// mobile_report_issue_screen.dart
 import 'dart:io';
 import 'package:fix_my_town/app/routes/app_routes.dart';
 import 'package:fix_my_town/features/dashboard/presentation/widgets/map_picker_widget.dart';
@@ -11,7 +11,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MobileReportIssueScreen extends ConsumerStatefulWidget {
-  const MobileReportIssueScreen({super.key});
+  final String? initialCategory;
+  const MobileReportIssueScreen({super.key, this.initialCategory});
 
   @override
   ConsumerState<MobileReportIssueScreen> createState() =>
@@ -25,7 +26,7 @@ class _MobileReportIssueScreenState
   final _locationController = TextEditingController();
   final _descriptionController = TextEditingController();
 
-  String _selectedCategory = 'Pothole';
+  late String _selectedCategory;
   String _selectedPriority = 'low';
   final List<File> _selectedImages = [];
   final ImagePicker _imagePicker = ImagePicker();
@@ -42,6 +43,16 @@ class _MobileReportIssueScreenState
 
   LatLng? _coordinates;
   bool _showMap = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCategory =
+        widget.initialCategory != null &&
+            _categories.contains(widget.initialCategory)
+        ? widget.initialCategory!
+        : _categories.first;
+  }
 
   @override
   void dispose() {
@@ -95,12 +106,10 @@ class _MobileReportIssueScreenState
   Future<void> _pickFromCamera() async {
     final hasPermission = await _requestPermission(Permission.camera);
     if (!hasPermission) return;
-
     final XFile? photo = await _imagePicker.pickImage(
       source: ImageSource.camera,
       imageQuality: 80,
     );
-
     if (photo != null && _selectedImages.length < 5) {
       setState(() => _selectedImages.add(File(photo.path)));
     }
@@ -111,12 +120,10 @@ class _MobileReportIssueScreenState
       final List<XFile> images = await _imagePicker.pickMultiImage(
         imageQuality: 80,
       );
-
       if (images.isNotEmpty) {
         final remaining = 5 - _selectedImages.length;
         final toAdd = images.take(remaining).map((x) => File(x.path)).toList();
         setState(() => _selectedImages.addAll(toAdd));
-
         if (images.length > remaining) {
           _showSnackbar(
             'Only $remaining more image(s) can be added (max 5)',
@@ -198,7 +205,6 @@ class _MobileReportIssueScreenState
         );
 
     final issuesState = ref.read(issuesViewModelProvider);
-
     if (!mounted) return;
 
     if (issuesState.status == IssuesStatus.created) {
@@ -219,11 +225,11 @@ class _MobileReportIssueScreenState
     _locationController.clear();
     _descriptionController.clear();
     setState(() {
-      _selectedCategory = 'Pothole';
+      _selectedCategory = _categories.first;
       _selectedPriority = 'low';
       _selectedImages.clear();
-      _coordinates = null; // add this
-      _showMap = false; // add this
+      _coordinates = null;
+      _showMap = false;
     });
   }
 
@@ -308,7 +314,7 @@ class _MobileReportIssueScreenState
               const SizedBox(height: 24),
 
               // ── Title ─────────────────────────────────────────────────
-              _SectionLabel(label: 'Title'),
+              const _SectionLabel(label: 'Title'),
               const SizedBox(height: 8),
               _InputField(
                 controller: _titleController,
@@ -326,7 +332,7 @@ class _MobileReportIssueScreenState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _SectionLabel(label: 'Category'),
+                        const _SectionLabel(label: 'Category'),
                         const SizedBox(height: 8),
                         _DropdownField<String>(
                           value: _selectedCategory,
@@ -343,7 +349,7 @@ class _MobileReportIssueScreenState
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _SectionLabel(label: 'Priority'),
+                        const _SectionLabel(label: 'Priority'),
                         const SizedBox(height: 8),
                         _DropdownField<String>(
                           value: _selectedPriority,
@@ -361,7 +367,7 @@ class _MobileReportIssueScreenState
               const SizedBox(height: 20),
 
               // ── Location ──────────────────────────────────────────────
-              _SectionLabel(label: 'Location'),
+              const _SectionLabel(label: 'Location'),
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -399,7 +405,6 @@ class _MobileReportIssueScreenState
                 ],
               ),
 
-              // Coordinates badge
               if (_coordinates != null) ...[
                 const SizedBox(height: 6),
                 Row(
@@ -421,7 +426,6 @@ class _MobileReportIssueScreenState
                 ),
               ],
 
-              // Map
               if (_showMap) ...[
                 const SizedBox(height: 12),
                 MapPickerWidget(
@@ -461,7 +465,7 @@ class _MobileReportIssueScreenState
               const SizedBox(height: 20),
 
               // ── Description ───────────────────────────────────────────
-              _SectionLabel(label: 'Description'),
+              const _SectionLabel(label: 'Description'),
               const SizedBox(height: 8),
               _InputField(
                 controller: _descriptionController,
@@ -478,7 +482,7 @@ class _MobileReportIssueScreenState
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _SectionLabel(label: 'Photos'),
+                  const _SectionLabel(label: 'Photos'),
                   Text(
                     '${_selectedImages.length}/5',
                     style: TextStyle(fontSize: 12, color: Colors.grey[500]),
@@ -487,7 +491,6 @@ class _MobileReportIssueScreenState
               ),
               const SizedBox(height: 8),
 
-              // Upload button
               GestureDetector(
                 onTap: _showImagePickerSheet,
                 child: Container(
@@ -498,7 +501,6 @@ class _MobileReportIssueScreenState
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: const Color(0xFF1EA095).withValues(alpha: 0.3),
-                      style: BorderStyle.solid,
                       width: 1.5,
                     ),
                   ),
@@ -536,7 +538,6 @@ class _MobileReportIssueScreenState
                 ),
               ),
 
-              // Image previews
               if (_selectedImages.isNotEmpty) ...[
                 const SizedBox(height: 12),
                 SizedBox(

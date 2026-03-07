@@ -16,6 +16,7 @@ class IssuesApiModel {
   final String? assignedTo;
   final String? resolvedAt;
   final String? remarks;
+  final String? createdAt;
 
   IssuesApiModel({
     this.id,
@@ -32,6 +33,7 @@ class IssuesApiModel {
     this.assignedTo,
     this.resolvedAt,
     this.remarks,
+    this.createdAt,
   });
 
   factory IssuesApiModel.fromJson(Map<String, dynamic> json) {
@@ -58,6 +60,7 @@ class IssuesApiModel {
           : json['assignedTo'] as String?,
       resolvedAt: json['resolvedAt'] as String?,
       remarks: json['remarks'] as String?,
+      createdAt: json['createdAt'] as String?,
     );
   }
 

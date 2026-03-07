@@ -1,4 +1,5 @@
 import 'package:fix_my_town/app/routes/app_routes.dart';
+import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_bottom_nav_screens/mobile_all_reports_screen.dart';
 import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_bottom_nav_screens/mobile_home_screen.dart';
 import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_bottom_nav_screens/mobile_my_reports_screen.dart';
 import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_bottom_nav_screens/mobile_profile_screen.dart';
@@ -20,7 +21,7 @@ class _MobileDashboardScreenState extends State<MobileDashboardScreen> {
   List<Widget> bottomScreens = [
     const MobileHomeScreen(),
     const MobileMyReportsScreen(),
-    const MobileMyReportsScreen(),
+    const MobileAllReportsScreen(),
     const MobileProfileScreen(),
   ];
 

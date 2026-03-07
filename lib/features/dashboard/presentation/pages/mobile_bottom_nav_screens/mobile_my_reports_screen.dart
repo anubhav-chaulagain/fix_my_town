@@ -217,7 +217,8 @@ class _MobileMyReportsScreenState extends ConsumerState<MobileMyReportsScreen> {
                         address: issue.location ?? 'Unknown location',
                         img: imageUrl,
                         status: issue.status ?? 'open',
-                        issueDate: issue.resolvedAt ?? '',
+                        issueDate: issue.createdAt ?? issue.resolvedAt ?? '',
+                        description: issue.description,
                       );
                     },
                   ),

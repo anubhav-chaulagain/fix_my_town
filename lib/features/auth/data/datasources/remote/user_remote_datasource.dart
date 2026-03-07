@@ -113,17 +113,14 @@ class UserRemoteDatasource implements IUserRemoteDatasource {
     try {
       final response = await _apiClient.put(
         ApiEndpoints.userUpdate,
-        data: user.toJsonForUpdate(),
+        data: user
+            .toJsonForUpdate(), // sends fullname, email, profilePicture URL
       );
-
-      print('Response Status: ${response.statusCode}');
-      print('Response Data: ${response.data}');
 
       if (response.data["success"] == true) {
         final data = response.data['data'] as Map<String, dynamic>;
         final updatedUser = UserApiModel.fromJson(data);
 
-        // Update seesion with new data
         await _userSessionService.saveUserSession(
           email: updatedUser.email,
           fullname: updatedUser.fullName!,
@@ -134,15 +131,11 @@ class UserRemoteDatasource implements IUserRemoteDatasource {
       }
       throw Exception('Update failed: ${response.data["message"]}');
     } catch (e) {
-      print('═══════════════════════════════════');
       print('UPDATE ERROR: $e');
-      print('Error Type: ${e.runtimeType}');
       if (e is DioException) {
         print('DioException Type: ${e.type}');
-        print('DioException Message: ${e.message}');
         print('Response Data: ${e.response?.data}');
       }
-      print('═══════════════════════════════════');
       rethrow;
     }
   }

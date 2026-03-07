@@ -268,19 +268,32 @@ class _MobileEditProfileScreenState
   // Helper method to get the profile image decoration
   // Add these two helper methods
   DecorationImage? _getProfileImage() {
-    // Priority: 1. Newly selected image, 2. Existing profile picture, 3. null
+    // Priority: 1. Newly selected image, 2. Uploaded photo URL from state, 3. Existing profile picture, 4. null
     if (_selectedMedia.isNotEmpty) {
       return DecorationImage(
         image: FileImage(File(_selectedMedia[0].path)),
         fit: BoxFit.cover,
       );
-    } else if (_existingProfilePicture != null &&
+    }
+
+    // Check if a new photo was just uploaded this session
+    final uploadedPhotoUrl = ref.read(authViewmodelProvider).uploadedPhotoUrl;
+    if (uploadedPhotoUrl != null && uploadedPhotoUrl.isNotEmpty) {
+      return DecorationImage(
+        image: NetworkImage(ApiEndpoints.getImageUrl(uploadedPhotoUrl)),
+        fit: BoxFit.cover,
+      );
+    }
+
+    // Fall back to existing profile picture from session
+    if (_existingProfilePicture != null &&
         _existingProfilePicture!.isNotEmpty) {
       return DecorationImage(
         image: NetworkImage(ApiEndpoints.getImageUrl(_existingProfilePicture)),
         fit: BoxFit.cover,
       );
     }
+
     return null;
   }
 

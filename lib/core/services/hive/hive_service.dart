@@ -1,5 +1,6 @@
 import 'package:fix_my_town/core/constants/hive_table_constants.dart';
 import 'package:fix_my_town/features/auth/data/models/user_hive_model.dart';
+import 'package:fix_my_town/features/issues/data/models/issues_hive_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -82,12 +83,17 @@ class HiveService {
     if (!Hive.isAdapterRegistered(HiveTableConstant.categoryTypeId)) {
       Hive.registerAdapter(CategoryHiveModelAdapter());
     }
+
+    if (!Hive.isAdapterRegistered(HiveTableConstant.reportTypeId)) {
+      Hive.registerAdapter(IssuesHiveModelAdapter());
+    }
   }
 
   // Open all boxes
   Future<void> _openBoxes() async {
     await Hive.openBox<UserHiveModel>(HiveTableConstant.userTable);
     await Hive.openBox<CategoryHiveModel>(HiveTableConstant.categoryTable);
+    await Hive.openBox<IssuesHiveModel>(HiveTableConstant.reportTable);
   }
 
   // Delete all batches
@@ -164,5 +170,62 @@ class HiveService {
 
   Future<void> deleteCategory(String categoryId) async {
     await _categoryBox.delete(categoryId);
+  }
+
+  // ISSUE QUERIES ------------------------------------
+  Box<IssuesHiveModel> get _issueBox =>
+      Hive.box<IssuesHiveModel>(HiveTableConstant.reportTable);
+
+  Future<IssuesHiveModel> createIssue(IssuesHiveModel issue) async {
+    await _issueBox.put(issue.issueId, issue);
+    return issue;
+  }
+
+  List<IssuesHiveModel> getAllIssues() {
+    return _issueBox.values.toList();
+  }
+
+  IssuesHiveModel? getIssueById(String issueId) {
+    return _issueBox.get(issueId);
+  }
+
+  Future<bool> updateIssue(IssuesHiveModel issue) async {
+    if (_issueBox.containsKey(issue.issueId)) {
+      await _issueBox.put(issue.issueId, issue);
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> deleteIssue(String issueId) async {
+    await _issueBox.delete(issueId);
+  }
+
+  List<IssuesHiveModel> getIssuesByStatus(String status) {
+    return _issueBox.values.where((issue) => issue.status == status).toList();
+  }
+
+  List<IssuesHiveModel> getIssuesByCategory(String category) {
+    return _issueBox.values
+        .where((issue) => issue.category == category)
+        .toList();
+  }
+
+  List<IssuesHiveModel> getIssuesByReportedBy(String reportedBy) {
+    return _issueBox.values
+        .where((issue) => issue.reportedBy == reportedBy)
+        .toList();
+  }
+
+  List<IssuesHiveModel> getIssuesByPriority(String priority) {
+    return _issueBox.values
+        .where((issue) => issue.priority == priority)
+        .toList();
+  }
+
+  List<IssuesHiveModel> getIssuesByAssignedTo(String assignedTo) {
+    return _issueBox.values
+        .where((issue) => issue.assignedTo == assignedTo)
+        .toList();
   }
 }

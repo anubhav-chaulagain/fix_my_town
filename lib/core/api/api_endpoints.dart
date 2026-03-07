@@ -28,4 +28,13 @@ class ApiEndpoints {
     if (filename == null || filename.isEmpty) return '';
     return '$baseUrl$uploadsPath/$filename';
   }
+
+  // issues ko
+  static const String issues = "/api/issues";
+  static const String issueUploadsPath = '/public/issue_images';
+
+  static String getIssueImageUrl(String? filename) {
+    if (filename == null || filename.isEmpty) return '';
+    return '$baseUrl$issueUploadsPath/$filename';
+  }
 }

@@ -1,6 +1,8 @@
+import 'package:fix_my_town/app/routes/app_routes.dart';
 import 'package:fix_my_town/core/api/api_client.dart';
 import 'package:fix_my_town/core/api/api_endpoints.dart';
 import 'package:fix_my_town/core/widgets/my_issue_card.dart';
+import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_issue_detail_screen.dart';
 import 'package:fix_my_town/features/issues/data/models/issues_api_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -312,13 +314,23 @@ class _MobileAllReportsScreenState
                     final imageUrl = (issue.issueImages?.isNotEmpty == true)
                         ? '${ApiEndpoints.baseUrl}${issue.issueImages!.first}'
                         : '';
-                    return MyIssueCard(
-                      title: issue.title ?? 'Untitled',
-                      address: issue.location ?? 'Unknown location',
-                      img: imageUrl,
-                      status: issue.status ?? 'open',
-                      issueDate: issue.createdAt ?? issue.resolvedAt ?? '',
-                      description: issue.description,
+                    return GestureDetector(
+                      onTap: () => AppRoutes.push(
+                        context,
+                        MobileIssueDetailScreen(
+                          issueId: issue.id!,
+                          preloaded:
+                              issue, // skips extra fetch, loads instantly
+                        ),
+                      ),
+                      child: MyIssueCard(
+                        title: issue.title ?? 'Untitled',
+                        address: issue.location ?? 'Unknown location',
+                        img: imageUrl,
+                        status: issue.status ?? 'open',
+                        issueDate: issue.createdAt ?? issue.resolvedAt ?? '',
+                        description: issue.description,
+                      ),
                     );
                   },
                 ),

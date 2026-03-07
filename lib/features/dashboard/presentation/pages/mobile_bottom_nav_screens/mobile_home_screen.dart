@@ -5,6 +5,7 @@ import 'package:fix_my_town/core/api/api_endpoints.dart';
 import 'package:fix_my_town/core/services/storage/user_session_service.dart';
 import 'package:fix_my_town/core/widgets/my_category_card.dart';
 import 'package:fix_my_town/core/widgets/my_issue_card.dart';
+import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_issue_detail_screen.dart';
 import 'package:fix_my_town/features/issues/data/models/issues_api_model.dart';
 import 'package:fix_my_town/features/issues/presentation/pages/mobile_report_issue_screen.dart';
 import 'package:fix_my_town/model/category_model.dart';
@@ -251,13 +252,23 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
                     final imageUrl = (issue.issueImages?.isNotEmpty == true)
                         ? '${ApiEndpoints.baseUrl}${issue.issueImages!.first}'
                         : '';
-                    return MyIssueCard(
-                      title: issue.title ?? 'Untitled',
-                      address: issue.location ?? 'Unknown location',
-                      img: imageUrl,
-                      status: issue.status ?? 'open',
-                      issueDate: issue.createdAt ?? issue.resolvedAt ?? '',
-                      description: issue.description,
+                    return GestureDetector(
+                      onTap: () => AppRoutes.push(
+                        context,
+                        MobileIssueDetailScreen(
+                          issueId: issue.id!,
+                          preloaded:
+                              issue, // skips extra fetch, loads instantly
+                        ),
+                      ),
+                      child: MyIssueCard(
+                        title: issue.title ?? 'Untitled',
+                        address: issue.location ?? 'Unknown location',
+                        img: imageUrl,
+                        status: issue.status ?? 'open',
+                        issueDate: issue.createdAt ?? issue.resolvedAt ?? '',
+                        description: issue.description,
+                      ),
                     );
                   },
                 ),

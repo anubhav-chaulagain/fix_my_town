@@ -1,4 +1,10 @@
+import 'dart:async';
+
+import 'package:fix_my_town/app/theme/app_colors.dart';
+import 'package:fix_my_town/core/services/sensor/shake_detector_service.dart';
 import 'package:fix_my_town/core/services/storage/user_session_service.dart';
+import 'package:fix_my_town/features/auth/presentation/pages/login_screen.dart';
+import 'package:fix_my_town/features/auth/presentation/view_model/auth_viewmodel.dart';
 import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_bottom_nav_screens/mobile_all_reports_screen.dart';
 import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_bottom_nav_screens/mobile_home_screen.dart';
 import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_bottom_nav_screens/mobile_my_reports_screen.dart';
@@ -17,6 +23,7 @@ class MobileDashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _MobileDashboardScreenState extends ConsumerState<MobileDashboardScreen> {
+  StreamSubscription? _shakeSubscription;
   static const primary = Color(0xFF1EA095);
 
   int _selectedIndex = 0;
@@ -31,6 +38,74 @@ class _MobileDashboardScreenState extends ConsumerState<MobileDashboardScreen> {
     final role =
         ref.read(userSessionServiceProvider).getRole()?.toLowerCase() ?? '';
     _isAuthority = role == 'authority' || role == 'admin';
+    _initShakeDetector();
+  }
+
+  void _initShakeDetector() {
+    final shakeService = ref.read(shakeDetectorServiceProvider);
+    shakeService.startListening();
+
+    _shakeSubscription = shakeService.onShake.listen((_) {
+      if (mounted) {
+        if (_isAuthority) {
+          // Authority → shake to logout
+          _showLogoutDialog(context, ref);
+        } else {
+          // Citizen → shake to report issue
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const MobileReportIssueScreen()),
+          );
+        }
+      }
+    });
+  }
+
+  void _showLogoutDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text(
+          'Logout',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              ref.read(authViewmodelProvider.notifier).logout();
+              Navigator.of(context).pop();
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                  (_) => false,
+                );
+              });
+            },
+            child: const Text(
+              'Logout',
+              style: TextStyle(
+                color: AppColors.error,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _shakeSubscription?.cancel();
+    final shakeService = ref.read(shakeDetectorServiceProvider);
+    shakeService.stopListening();
+    super.dispose();
   }
 
   List<Widget> get _screens => _isAuthority

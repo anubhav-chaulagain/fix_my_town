@@ -1,13 +1,12 @@
 import 'package:fix_my_town/app/routes/app_routes.dart';
 import 'package:fix_my_town/core/api/api_client.dart';
 import 'package:fix_my_town/core/api/api_endpoints.dart';
+import 'package:fix_my_town/core/services/sensor/gyroscope_service.dart';
 import 'package:fix_my_town/core/widgets/my_issue_card.dart';
 import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_issue_detail_screen.dart';
 import 'package:fix_my_town/features/issues/data/models/issues_api_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-// ── Filter constants ─────────────────────────────────────────────────────────
 
 const _statusFilters = <Map<String, String>>[
   {'label': 'All', 'value': ''},
@@ -26,8 +25,6 @@ const _categoryFilters = <Map<String, String>>[
   {'label': 'Water Leakage', 'value': 'Water Leakage'},
 ];
 
-// ── Screen ───────────────────────────────────────────────────────────────────
-
 class MobileAllReportsScreen extends ConsumerStatefulWidget {
   const MobileAllReportsScreen({super.key});
 
@@ -42,18 +39,25 @@ class _MobileAllReportsScreenState
   bool _isLoading = true;
   String? _error;
 
-  // Active filter values sent to backend
   String _activeStatus = '';
   String _activeCategory = '';
-
-  // UI label for chip highlight
   String _selectedStatusLabel = 'All';
   String _selectedCategoryLabel = 'All';
+
+  // Gyroscope
+  final GyroscopeScrollService _gyroService = GyroscopeScrollService();
 
   @override
   void initState() {
     super.initState();
     _fetchData();
+    _gyroService.startListening();
+  }
+
+  @override
+  void dispose() {
+    _gyroService.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchData({String status = '', String category = ''}) async {
@@ -64,8 +68,6 @@ class _MobileAllReportsScreenState
 
     try {
       final apiClient = ref.read(apiClientProvider);
-
-      // Only send non-empty params — backend ignores missing ones
       final queryParams = <String, dynamic>{};
       if (status.isNotEmpty) queryParams['status'] = status;
       if (category.isNotEmpty) queryParams['category'] = category;
@@ -132,12 +134,12 @@ class _MobileAllReportsScreenState
         onRefresh: () =>
             _fetchData(status: _activeStatus, category: _activeCategory),
         child: SingleChildScrollView(
+          controller: _gyroService.scrollController, // 👈 attach here
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.only(bottom: 80),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── Header ────────────────────────────────────────────────
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 20, 20, 4),
                 child: Row(
@@ -185,7 +187,6 @@ class _MobileAllReportsScreenState
 
               const SizedBox(height: 14),
 
-              // ── Status Chips ──────────────────────────────────────────
               const _SectionLabel(label: 'Status'),
               const SizedBox(height: 8),
               SizedBox(
@@ -209,7 +210,6 @@ class _MobileAllReportsScreenState
 
               const SizedBox(height: 14),
 
-              // ── Category Chips ────────────────────────────────────────
               const _SectionLabel(label: 'Category'),
               const SizedBox(height: 8),
               SizedBox(
@@ -233,7 +233,6 @@ class _MobileAllReportsScreenState
 
               const SizedBox(height: 20),
 
-              // ── Body ──────────────────────────────────────────────────
               if (_isLoading)
                 const Center(
                   child: Padding(
@@ -319,8 +318,7 @@ class _MobileAllReportsScreenState
                         context,
                         MobileIssueDetailScreen(
                           issueId: issue.id!,
-                          preloaded:
-                              issue, // skips extra fetch, loads instantly
+                          preloaded: issue,
                         ),
                       ),
                       child: MyIssueCard(
@@ -341,8 +339,6 @@ class _MobileAllReportsScreenState
     );
   }
 }
-
-// ── Reusable widgets ─────────────────────────────────────────────────────────
 
 class _SectionLabel extends StatelessWidget {
   const _SectionLabel({required this.label});

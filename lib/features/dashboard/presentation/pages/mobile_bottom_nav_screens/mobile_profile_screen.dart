@@ -1,7 +1,7 @@
-// mobile_profile_screen.dart
 import 'package:fix_my_town/app/theme/app_colors.dart';
 import 'package:fix_my_town/core/api/api_client.dart';
 import 'package:fix_my_town/core/api/api_endpoints.dart';
+import 'package:fix_my_town/core/services/sensor/gyroscope_service.dart';
 import 'package:fix_my_town/core/services/storage/user_session_service.dart';
 import 'package:fix_my_town/features/auth/presentation/pages/login_screen.dart';
 import 'package:fix_my_town/features/auth/presentation/view_model/auth_viewmodel.dart';
@@ -53,8 +53,6 @@ void _showLogoutDialog(BuildContext context, WidgetRef ref) {
   );
 }
 
-// ── Authority stats model ─────────────────────────────────────────────────────
-
 class _AuthorityStats {
   final int assignedIssues;
   final int completedIssues;
@@ -80,8 +78,6 @@ class _AuthorityStats {
       );
 }
 
-// ── Screen ────────────────────────────────────────────────────────────────────
-
 class MobileProfileScreen extends ConsumerStatefulWidget {
   const MobileProfileScreen({super.key});
 
@@ -98,6 +94,9 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
   bool _isLoadingStats = true;
   bool _isAuthority = false;
 
+  // Gyroscope
+  final GyroscopeScrollService _gyroService = GyroscopeScrollService();
+
   @override
   void initState() {
     super.initState();
@@ -105,6 +104,13 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
         ref.read(userSessionServiceProvider).getRole()?.toLowerCase() ?? '';
     _isAuthority = role == 'authority' || role == 'admin';
     _fetchStats();
+    _gyroService.startListening();
+  }
+
+  @override
+  void dispose() {
+    _gyroService.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchStats() async {
@@ -151,7 +157,6 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
     final email = session.getUserEmail() ?? '';
     final profileImage = session.getProfileImage();
 
-    // ── Account items ─────────────────────────────────────────────
     final List<AccountItem> accountItems = [
       AccountItem(
         id: 1,
@@ -189,7 +194,6 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
       ),
     ];
 
-    // ── App items ─────────────────────────────────────────────────
     final List<AccountItem> appItems = [
       AccountItem(
         id: 5,
@@ -226,6 +230,7 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
 
     return SafeArea(
       child: SingleChildScrollView(
+        controller: _gyroService.scrollController, // 👈 gyroscope attached
         padding: const EdgeInsets.fromLTRB(16, 20, 16, 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -401,8 +406,6 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
   }
 }
 
-// ── Citizen stats row ─────────────────────────────────────────────────────────
-
 class _CitizenStatsRow extends StatelessWidget {
   const _CitizenStatsRow({this.stats});
   final ReportStatsModel? stats;
@@ -440,8 +443,6 @@ class _CitizenStatsRow extends StatelessWidget {
   }
 }
 
-// ── Authority stats row ───────────────────────────────────────────────────────
-
 class _AuthorityStatsRow extends StatelessWidget {
   const _AuthorityStatsRow({this.stats});
   final _AuthorityStats? stats;
@@ -466,8 +467,6 @@ class _AuthorityStatsRow extends StatelessWidget {
     );
   }
 }
-
-// ── Authority info card ───────────────────────────────────────────────────────
 
 class _AuthorityInfoCard extends StatelessWidget {
   const _AuthorityInfoCard({required this.stats});
@@ -568,8 +567,6 @@ class _InfoEntry {
   final String value;
   const _InfoEntry(this.icon, this.label, this.value);
 }
-
-// ── Shared widgets ────────────────────────────────────────────────────────────
 
 class _SectionLabel extends StatelessWidget {
   const _SectionLabel({required this.label});

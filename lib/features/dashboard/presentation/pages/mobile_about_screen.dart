@@ -129,10 +129,6 @@ class _MobileAboutScreenState extends State<MobileAboutScreen> {
                     label: 'Build',
                     value: _packageInfo?.buildNumber ?? '—',
                   ),
-                  _DetailRow(
-                    label: 'Package',
-                    value: _packageInfo?.packageName ?? '—',
-                  ),
                   const _DetailRow(label: 'Platform', value: 'Android / iOS'),
                 ],
               ),

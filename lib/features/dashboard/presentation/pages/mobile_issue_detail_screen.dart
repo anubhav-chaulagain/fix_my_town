@@ -9,8 +9,6 @@ import 'package:latlong2/latlong.dart';
 
 class MobileIssueDetailScreen extends ConsumerStatefulWidget {
   final String issueId;
-
-  // Optionally pass the issue directly to avoid extra fetch
   final IssuesApiModel? preloaded;
 
   const MobileIssueDetailScreen({
@@ -31,18 +29,19 @@ class _MobileIssueDetailScreenState
   IssuesApiModel? _issue;
   bool _isLoading = true;
   String? _error;
-
-  // For image gallery
   int _currentImageIndex = 0;
-
-  // For status update (authority only)
   bool _isUpdating = false;
   String? _updateError;
 
   @override
   void initState() {
     super.initState();
-    if (widget.preloaded != null) {
+    final role =
+        ref.read(userSessionServiceProvider).getRole()?.toLowerCase() ?? '';
+    final isAuthority = role == 'authority' || role == 'admin';
+
+    // Authority always fetches fresh so assignedToEmail is populated for permission check
+    if (widget.preloaded != null && !isAuthority) {
       _issue = widget.preloaded;
       _isLoading = false;
     } else {
@@ -86,12 +85,11 @@ class _MobileIssueDetailScreenState
     });
     try {
       final apiClient = ref.read(apiClientProvider);
-      final response = await apiClient.put(
+      final response = await apiClient.patch(
         '${ApiEndpoints.issues}/${widget.issueId}/status',
         data: {'status': newStatus},
       );
       if (response.data['success'] == true) {
-        // Refresh the issue
         await _fetchIssue();
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -111,9 +109,7 @@ class _MobileIssueDetailScreenState
         });
       }
     } catch (e) {
-      setState(() {
-        _updateError = e.toString();
-      });
+      setState(() => _updateError = e.toString());
     } finally {
       setState(() => _isUpdating = false);
     }
@@ -139,7 +135,6 @@ class _MobileIssueDetailScreenState
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Handle
             Center(
               child: Container(
                 width: 40,
@@ -226,7 +221,7 @@ class _MobileIssueDetailScreenState
 
     return CustomScrollView(
       slivers: [
-        // ── App Bar with image ──────────────────────────────────────
+        // ── App Bar ───────────────────────────────────────────────
         SliverAppBar(
           expandedHeight: hasImages ? 280 : 120,
           pinned: true,
@@ -248,7 +243,6 @@ class _MobileIssueDetailScreenState
                           errorBuilder: (_, __, ___) => _ImagePlaceholder(),
                         ),
                       ),
-                      // Gradient overlay
                       Positioned(
                         bottom: 0,
                         left: 0,
@@ -267,7 +261,6 @@ class _MobileIssueDetailScreenState
                           ),
                         ),
                       ),
-                      // Dots
                       if (images.length > 1)
                         Positioned(
                           bottom: 12,
@@ -300,14 +293,14 @@ class _MobileIssueDetailScreenState
           ),
         ),
 
-        // ── Content ─────────────────────────────────────────────────
+        // ── Content ───────────────────────────────────────────────
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 100),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ── Title + badges ────────────────────────────────
+                // Title + badges
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -337,7 +330,7 @@ class _MobileIssueDetailScreenState
 
                 const SizedBox(height: 16),
 
-                // ── Info cards ────────────────────────────────────
+                // Info card
                 _InfoCard(
                   children: [
                     _InfoRow(
@@ -370,7 +363,7 @@ class _MobileIssueDetailScreenState
 
                 const SizedBox(height: 16),
 
-                // ── Description ───────────────────────────────────
+                // Description
                 if (issue.description != null &&
                     issue.description!.isNotEmpty) ...[
                   const _SectionTitle(title: 'Description'),
@@ -390,21 +383,20 @@ class _MobileIssueDetailScreenState
                   const SizedBox(height: 16),
                 ],
 
-                // ── People ────────────────────────────────────────
+                // People
                 if (issue.reportedByName != null ||
                     issue.assignedToName != null) ...[
                   const _SectionTitle(title: 'People'),
                   const SizedBox(height: 8),
                   _InfoCard(
                     children: [
-                      if (issue.reportedByName != null) ...[
+                      if (issue.reportedByName != null)
                         _PersonRow(
                           icon: Icons.person_outline,
                           label: 'Reported by',
                           name: issue.reportedByName!,
                           email: issue.reportedByEmail,
                         ),
-                      ],
                       if (issue.reportedByName != null &&
                           issue.assignedToName != null)
                         _Divider(),
@@ -420,7 +412,7 @@ class _MobileIssueDetailScreenState
                   const SizedBox(height: 16),
                 ],
 
-                // ── Remarks ───────────────────────────────────────
+                // Remarks
                 if (issue.remarks != null && issue.remarks!.isNotEmpty) ...[
                   const _SectionTitle(title: 'Remarks'),
                   const SizedBox(height: 8),
@@ -452,7 +444,7 @@ class _MobileIssueDetailScreenState
                   const SizedBox(height: 16),
                 ],
 
-                // ── Update error ──────────────────────────────────
+                // Update error
                 if (_updateError != null)
                   Container(
                     padding: const EdgeInsets.all(12),
@@ -480,7 +472,8 @@ class _MobileIssueDetailScreenState
                       ],
                     ),
                   ),
-                // ── Map ───────────────────────────────────────────
+
+                // Map
                 if (issue.latitude != null && issue.longitude != null) ...[
                   const SizedBox(height: 16),
                   const _SectionTitle(title: 'Location on Map'),
@@ -498,13 +491,19 @@ class _MobileIssueDetailScreenState
     );
   }
 
-  // ── Bottom button for authority ────────────────────────────────────────────
-
   @override
   Widget build(BuildContext context) {
-    final role =
-        ref.read(userSessionServiceProvider).getRole()?.toLowerCase() ?? '';
+    final session = ref.read(userSessionServiceProvider);
+    final role = session.getRole()?.toLowerCase() ?? '';
+    final currentEmail = session.getUserEmail() ?? '';
     final isAuthority = role == 'authority' || role == 'admin';
+
+    // ✅ Button only shows if authority AND this issue is assigned to them
+    final canUpdateStatus =
+        isAuthority &&
+        _issue != null &&
+        _issue!.assignedToEmail != null &&
+        _issue!.assignedToEmail == currentEmail;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
@@ -513,7 +512,7 @@ class _MobileIssueDetailScreenState
           : _error != null
           ? _ErrorView(error: _error!, onRetry: _fetchIssue)
           : _buildContent(isAuthority),
-      bottomNavigationBar: (!_isLoading && _error == null && isAuthority)
+      bottomNavigationBar: (!_isLoading && _error == null && canUpdateStatus)
           ? SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -566,7 +565,7 @@ class _MobileIssueDetailScreenState
   }
 }
 
-// ── Extended model to carry populated fields ──────────────────────────────────
+// ── Extended model ────────────────────────────────────────────────────────────
 
 extension _IssueDetailModel on IssuesApiModel {
   static IssuesApiModel fromDetailJson(Map<String, dynamic> json) {
@@ -725,7 +724,7 @@ String _formatStatus(String s) {
   }
 }
 
-// ── Small reusable widgets ────────────────────────────────────────────────────
+// ── Widgets ───────────────────────────────────────────────────────────────────
 
 class _StatusBadge extends StatelessWidget {
   const _StatusBadge({required this.status});

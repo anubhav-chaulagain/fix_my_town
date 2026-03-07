@@ -17,6 +17,7 @@ class ApiEndpoints {
   static const String userRegister = "/api/auth/register";
   static const String userUploadPhoto = '/api/auth/upload-photo';
   static const String userUpdate = '/api/auth/update-profile';
+  static const String authorityStats = "/api/auth/authority-stats";
   // static String userById(String id) => '/users/$id';
   // static String userPhoto(String id) => "/users/$id/photo";
 
@@ -36,6 +37,7 @@ class ApiEndpoints {
   static const String reportStats = "/api/auth/report-stats";
   static const String myRecentIssues = "/api/issues/my-recent";
   static const String myIssues = "/api/issues/my-issues";
+  static const String myAssignedIssues = "/api/issues/my-assigned";
 
   static String getIssueImageUrl(String? filename) {
     if (filename == null || filename.isEmpty) return '';

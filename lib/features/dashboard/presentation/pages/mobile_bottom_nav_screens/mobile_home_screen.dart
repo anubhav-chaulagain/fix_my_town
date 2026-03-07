@@ -20,34 +20,124 @@ class MobileHomeScreen extends ConsumerStatefulWidget {
 }
 
 class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
+  static const primary = Color(0xFF1EA095);
+
   List<IssuesApiModel> _recentIssues = [];
+  List<IssuesApiModel> _assignedIssues = [];
   bool _isLoading = true;
   String? _error;
+
+  // Pagination for authority worklist
+  int _currentPage = 1;
+  int _totalPages = 1;
+  bool _isLoadingMore = false;
+
+  late bool _isAuthority;
 
   @override
   void initState() {
     super.initState();
-    _fetchRecentIssues();
+    final role =
+        ref.read(userSessionServiceProvider).getRole()?.toLowerCase() ?? '';
+    _isAuthority = role == 'authority' || role == 'admin';
+    _fetchData();
   }
 
-  Future<void> _fetchRecentIssues() async {
+  Future<void> _fetchData({bool reset = true}) async {
+    if (reset) {
+      setState(() {
+        _isLoading = true;
+        _error = null;
+        _currentPage = 1;
+        _assignedIssues = [];
+        _recentIssues = [];
+      });
+    }
+
     try {
       final apiClient = ref.read(apiClientProvider);
-      final response = await apiClient.get(ApiEndpoints.myRecentIssues);
-      if (response.data['success'] == true) {
-        final data = response.data['data'] as List;
-        setState(() {
-          _recentIssues = data
-              .map((json) => IssuesApiModel.fromJson(json))
-              .toList();
-          _isLoading = false;
-        });
+
+      if (_isAuthority) {
+        final response = await apiClient.get(
+          ApiEndpoints.myAssignedIssues,
+          queryParameters: {'page': '$_currentPage', 'size': '10'},
+        );
+        if (response.data['success'] == true) {
+          final data = response.data['data'] as List;
+          final pagination = response.data['pagination'];
+          setState(() {
+            if (reset) {
+              _assignedIssues = data
+                  .map((j) => IssuesApiModel.fromJson(j))
+                  .where(
+                    (i) => ![
+                      'resolved',
+                      'rejected',
+                      'closed',
+                    ].contains((i.status ?? '').toLowerCase()),
+                  )
+                  .toList();
+            } else {
+              _assignedIssues.addAll(
+                data.map((j) => IssuesApiModel.fromJson(j)),
+              );
+            }
+            _totalPages = pagination['totalPages'] ?? 1;
+            _isLoading = false;
+          });
+        } else {
+          setState(() {
+            _error = response.data['message'] ?? 'Failed to load worklist';
+            _isLoading = false;
+          });
+        }
+      } else {
+        final response = await apiClient.get(ApiEndpoints.myRecentIssues);
+        if (response.data['success'] == true) {
+          final data = response.data['data'] as List;
+          setState(() {
+            _recentIssues = data
+                .map((j) => IssuesApiModel.fromJson(j))
+                .toList();
+            _isLoading = false;
+          });
+        } else {
+          setState(() {
+            _error = response.data['message'] ?? 'Failed to load activity';
+            _isLoading = false;
+          });
+        }
       }
     } catch (e) {
       setState(() {
         _error = e.toString();
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _loadMoreAssigned() async {
+    if (_isLoadingMore || _currentPage >= _totalPages) return;
+    setState(() {
+      _isLoadingMore = true;
+      _currentPage++;
+    });
+    try {
+      final apiClient = ref.read(apiClientProvider);
+      final response = await apiClient.get(
+        ApiEndpoints.myAssignedIssues,
+        queryParameters: {'page': '$_currentPage', 'size': '10'},
+      );
+      if (response.data['success'] == true) {
+        final data = response.data['data'] as List;
+        setState(() {
+          _assignedIssues.addAll(data.map((j) => IssuesApiModel.fromJson(j)));
+        });
+      }
+    } catch (_) {
+      setState(() => _currentPage--); // rollback on error
+    } finally {
+      setState(() => _isLoadingMore = false);
     }
   }
 
@@ -82,6 +172,26 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
     ),
   ];
 
+  Widget _buildIssueCard(IssuesApiModel issue) {
+    final imageUrl = (issue.issueImages?.isNotEmpty == true)
+        ? '${ApiEndpoints.baseUrl}${issue.issueImages!.first}'
+        : '';
+    return GestureDetector(
+      onTap: () => AppRoutes.push(
+        context,
+        MobileIssueDetailScreen(issueId: issue.id!, preloaded: issue),
+      ),
+      child: MyIssueCard(
+        title: issue.title ?? 'Untitled',
+        address: issue.location ?? 'Unknown location',
+        img: imageUrl,
+        status: issue.status ?? 'open',
+        issueDate: issue.createdAt ?? issue.resolvedAt ?? '',
+        description: issue.description,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final userSession = ref.read(userSessionServiceProvider);
@@ -90,8 +200,8 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
 
     return SafeArea(
       child: RefreshIndicator(
-        color: const Color(0xFF1EA095),
-        onRefresh: _fetchRecentIssues,
+        color: primary,
+        onRefresh: () => _fetchData(),
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.only(bottom: 80),
@@ -111,85 +221,103 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.only(left: 20, bottom: 20),
-                child: Text(
-                  'Select a category to report an issue',
-                  style: TextStyle(color: Color(0xFF6B7280), fontSize: 14),
-                ),
-              ),
-
-              // ── Categories ───────────────────────────────────────────
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    const spacing = 12.0;
-                    const crossAxisCount = 2;
-                    final cardWidth =
-                        (constraints.maxWidth - spacing) / crossAxisCount;
-                    final rows = (_categories.length / crossAxisCount).ceil();
-                    final gridHeight =
-                        (rows * cardWidth) + ((rows - 1) * spacing);
-
-                    return SizedBox(
-                      height: gridHeight,
-                      child: GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: crossAxisCount,
-                              crossAxisSpacing: spacing,
-                              mainAxisSpacing: spacing,
-                            ),
-                        itemCount: _categories.length,
-                        itemBuilder: (context, index) {
-                          final category = _categories[index];
-
-                          // Map display name → backend category value
-                          final categoryMap = {
-                            'Garbage': 'Garbage',
-                            'Road Damage': 'Pothole',
-                            'Street Lights': 'Broken Streetlight',
-                            'Water': 'Water Leakage',
-                          };
-
-                          return GestureDetector(
-                            onTap: () => AppRoutes.push(
-                              context,
-                              MobileReportIssueScreen(
-                                initialCategory:
-                                    categoryMap[category.name] ?? category.name,
-                              ),
-                            ),
-                            child: MyCategoryCard(category: category),
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              // ── Recent Activity ───────────────────────────────────────
-              const Padding(
-                padding: EdgeInsets.only(left: 20, top: 24, bottom: 12),
+                padding: const EdgeInsets.only(left: 20, bottom: 20),
                 child: Text(
-                  'Recent Activity',
-                  style: TextStyle(
-                    fontFamily: 'Roboto Bold',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0xFF0F172A),
+                  _isAuthority
+                      ? 'Manage your assigned issues'
+                      : 'Select a category to report an issue',
+                  style: const TextStyle(
+                    color: Color(0xFF6B7280),
+                    fontSize: 14,
                   ),
                 ),
               ),
 
+              // ── Categories (citizen only) ─────────────────────────────
+              if (!_isAuthority) ...[
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      const spacing = 12.0;
+                      const crossAxisCount = 2;
+                      final cardWidth =
+                          (constraints.maxWidth - spacing) / crossAxisCount;
+                      final rows = (_categories.length / crossAxisCount).ceil();
+                      final gridHeight =
+                          (rows * cardWidth) + ((rows - 1) * spacing);
+
+                      return SizedBox(
+                        height: gridHeight,
+                        child: GridView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                crossAxisSpacing: spacing,
+                                mainAxisSpacing: spacing,
+                              ),
+                          itemCount: _categories.length,
+                          itemBuilder: (context, index) {
+                            final category = _categories[index];
+                            const categoryMap = {
+                              'Garbage': 'Garbage',
+                              'Road Damage': 'Pothole',
+                              'Street Lights': 'Broken Streetlight',
+                              'Water': 'Water Leakage',
+                            };
+                            return GestureDetector(
+                              onTap: () => AppRoutes.push(
+                                context,
+                                MobileReportIssueScreen(
+                                  initialCategory:
+                                      categoryMap[category.name] ??
+                                      category.name,
+                                ),
+                              ),
+                              child: MyCategoryCard(category: category),
+                            );
+                          },
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+
+              // ── Section header ────────────────────────────────────────
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 20,
+                  top: _isAuthority ? 8 : 24,
+                  bottom: 12,
+                  right: 20,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      _isAuthority ? 'My Worklist' : 'Recent Activity',
+                      style: const TextStyle(
+                        fontFamily: 'Roboto Bold',
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF0F172A),
+                      ),
+                    ),
+                    if (_isAuthority && !_isLoading)
+                      _WorklistSummaryBadge(issues: _assignedIssues),
+                  ],
+                ),
+              ),
+
+              // ── Body ─────────────────────────────────────────────────
               if (_isLoading)
                 const Center(
                   child: Padding(
                     padding: EdgeInsets.all(32),
-                    child: CircularProgressIndicator(color: Color(0xFF1EA095)),
+                    child: CircularProgressIndicator(color: primary),
                   ),
                 )
               else if (_error != null)
@@ -205,75 +333,195 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Failed to load recent activity',
+                          _isAuthority
+                              ? 'Failed to load worklist'
+                              : 'Failed to load recent activity',
                           style: TextStyle(color: Colors.grey[600]),
                         ),
                         const SizedBox(height: 12),
                         TextButton(
-                          onPressed: _fetchRecentIssues,
+                          onPressed: () => _fetchData(),
                           child: const Text(
                             'Retry',
-                            style: TextStyle(color: Color(0xFF1EA095)),
+                            style: TextStyle(color: primary),
                           ),
                         ),
                       ],
                     ),
                   ),
                 )
-              else if (_recentIssues.isEmpty)
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Column(
-                      children: [
-                        Icon(
-                          Icons.inbox_outlined,
-                          color: Colors.grey[300],
-                          size: 48,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'No recent activity yet',
-                          style: TextStyle(color: Colors.grey[500]),
-                        ),
-                      ],
+              else if (_isAuthority) ...[
+                // ── Authority worklist ──────────────────────────────
+                if (_assignedIssues.isEmpty)
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.assignment_outlined,
+                            color: Colors.grey[300],
+                            size: 48,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'No issues assigned to you yet',
+                            style: TextStyle(color: Colors.grey[500]),
+                          ),
+                        ],
+                      ),
                     ),
+                  )
+                else ...[
+                  ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _assignedIssues.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (_, index) =>
+                        _buildIssueCard(_assignedIssues[index]),
                   ),
-                )
-              else
-                ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: _recentIssues.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
-                  itemBuilder: (context, index) {
-                    final issue = _recentIssues[index];
-                    final imageUrl = (issue.issueImages?.isNotEmpty == true)
-                        ? '${ApiEndpoints.baseUrl}${issue.issueImages!.first}'
-                        : '';
-                    return GestureDetector(
-                      onTap: () => AppRoutes.push(
-                        context,
-                        MobileIssueDetailScreen(
-                          issueId: issue.id!,
-                          preloaded:
-                              issue, // skips extra fetch, loads instantly
+
+                  // Load more button
+                  if (_currentPage < _totalPages)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                          onPressed: _isLoadingMore ? null : _loadMoreAssigned,
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: primary,
+                            side: const BorderSide(color: primary),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          child: _isLoadingMore
+                              ? const SizedBox(
+                                  width: 18,
+                                  height: 18,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: primary,
+                                  ),
+                                )
+                              : Text(
+                                  'Load more  (${_assignedIssues.length} of ${_assignedIssues.length + (_totalPages - _currentPage) * 10})',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                         ),
                       ),
-                      child: MyIssueCard(
-                        title: issue.title ?? 'Untitled',
-                        address: issue.location ?? 'Unknown location',
-                        img: imageUrl,
-                        status: issue.status ?? 'open',
-                        issueDate: issue.createdAt ?? issue.resolvedAt ?? '',
-                        description: issue.description,
+                    ),
+                ],
+              ] else ...[
+                // ── Citizen recent activity ─────────────────────────
+                if (_recentIssues.isEmpty)
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(32),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.inbox_outlined,
+                            color: Colors.grey[300],
+                            size: 48,
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'No recent activity yet',
+                            style: TextStyle(color: Colors.grey[500]),
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  )
+                else
+                  ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _recentIssues.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 12),
+                    itemBuilder: (_, index) =>
+                        _buildIssueCard(_recentIssues[index]),
+                  ),
+              ],
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── Small badge showing pending/in-progress count ────────────────────────────
+
+class _WorklistSummaryBadge extends StatelessWidget {
+  const _WorklistSummaryBadge({required this.issues});
+  final List<IssuesApiModel> issues;
+
+  @override
+  Widget build(BuildContext context) {
+    final pending = issues
+        .where(
+          (i) =>
+              (i.status ?? '').toLowerCase() == 'pending' ||
+              (i.status ?? '').toLowerCase() == 'open',
+        )
+        .length;
+    final inProgress = issues
+        .where((i) => (i.status ?? '').toLowerCase() == 'in_progress')
+        .length;
+
+    if (pending == 0 && inProgress == 0) return const SizedBox.shrink();
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (pending > 0)
+          _MiniChip(
+            label: '$pending pending',
+            color: const Color(0xFFB45309),
+            bg: const Color(0xFFFEF3C7),
+          ),
+        if (pending > 0 && inProgress > 0) const SizedBox(width: 6),
+        if (inProgress > 0)
+          _MiniChip(
+            label: '$inProgress active',
+            color: const Color(0xFF1D4ED8),
+            bg: const Color(0xFFDBEAFE),
+          ),
+      ],
+    );
+  }
+}
+
+class _MiniChip extends StatelessWidget {
+  const _MiniChip({required this.label, required this.color, required this.bg});
+  final String label;
+  final Color color;
+  final Color bg;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: color,
         ),
       ),
     );

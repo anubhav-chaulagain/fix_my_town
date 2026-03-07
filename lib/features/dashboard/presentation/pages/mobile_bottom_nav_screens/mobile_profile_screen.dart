@@ -1,3 +1,4 @@
+// mobile_profile_screen.dart
 import 'package:fix_my_town/app/theme/app_colors.dart';
 import 'package:fix_my_town/core/api/api_client.dart';
 import 'package:fix_my_town/core/api/api_endpoints.dart';
@@ -6,6 +7,8 @@ import 'package:fix_my_town/features/auth/presentation/pages/login_screen.dart';
 import 'package:fix_my_town/features/auth/presentation/view_model/auth_viewmodel.dart';
 import 'package:fix_my_town/features/auth/presentation/pages/mobile_edit_profile_screen.dart';
 import 'package:fix_my_town/features/dashboard/data/models/report_stats.model.dart';
+import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_about_screen.dart';
+import 'package:fix_my_town/features/dashboard/presentation/pages/mobile_change_password_screen.dart';
 import 'package:fix_my_town/model/account_item_model.dart';
 import 'package:fix_my_town/core/widgets/my_account_item_card.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +53,35 @@ void _showLogoutDialog(BuildContext context, WidgetRef ref) {
   );
 }
 
+// ── Authority stats model ─────────────────────────────────────────────────────
+
+class _AuthorityStats {
+  final int assignedIssues;
+  final int completedIssues;
+  final String? department;
+  final String? phoneNumber;
+  final String? employeeId;
+
+  _AuthorityStats({
+    required this.assignedIssues,
+    required this.completedIssues,
+    this.department,
+    this.phoneNumber,
+    this.employeeId,
+  });
+
+  factory _AuthorityStats.fromJson(Map<String, dynamic> json) =>
+      _AuthorityStats(
+        assignedIssues: json['assignedIssues'] ?? 0,
+        completedIssues: json['completedIssues'] ?? 0,
+        department: json['department'] as String?,
+        phoneNumber: json['phoneNumber'] as String?,
+        employeeId: json['employeeId'] as String?,
+      );
+}
+
+// ── Screen ────────────────────────────────────────────────────────────────────
+
 class MobileProfileScreen extends ConsumerStatefulWidget {
   const MobileProfileScreen({super.key});
 
@@ -59,28 +91,57 @@ class MobileProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
-  ReportStatsModel? _stats;
+  static const primary = Color(0xFF1EA095);
+
+  ReportStatsModel? _citizenStats;
+  _AuthorityStats? _authorityStats;
   bool _isLoadingStats = true;
+  bool _isAuthority = false;
 
   @override
   void initState() {
     super.initState();
+    final role =
+        ref.read(userSessionServiceProvider).getRole()?.toLowerCase() ?? '';
+    _isAuthority = role == 'authority' || role == 'admin';
     _fetchStats();
   }
 
   Future<void> _fetchStats() async {
+    setState(() => _isLoadingStats = true);
     try {
       final apiClient = ref.read(apiClientProvider);
-      final response = await apiClient.get(ApiEndpoints.reportStats);
-      if (response.data['success'] == true) {
-        setState(() {
-          _stats = ReportStatsModel.fromJson(response.data['data']);
-          _isLoadingStats = false;
-        });
+      if (_isAuthority) {
+        final response = await apiClient.get(ApiEndpoints.authorityStats);
+        if (response.data['success'] == true) {
+          setState(() {
+            _authorityStats = _AuthorityStats.fromJson(response.data['data']);
+          });
+        }
+      } else {
+        final response = await apiClient.get(ApiEndpoints.reportStats);
+        if (response.data['success'] == true) {
+          setState(() {
+            _citizenStats = ReportStatsModel.fromJson(response.data['data']);
+          });
+        }
       }
     } catch (_) {
+      // stats are non-critical
+    } finally {
       setState(() => _isLoadingStats = false);
     }
+  }
+
+  void _showComingSoon(BuildContext context, String feature) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$feature — coming soon'),
+        backgroundColor: const Color(0xFF64748B),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
   }
 
   @override
@@ -90,6 +151,7 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
     final email = session.getUserEmail() ?? '';
     final profileImage = session.getProfileImage();
 
+    // ── Account items ─────────────────────────────────────────────
     final List<AccountItem> accountItems = [
       AccountItem(
         id: 1,
@@ -98,48 +160,67 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
         color: const Color(0xFF2563EB),
         onPressed: () => Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => const MobileEditProfileScreen(),
-          ),
+          MaterialPageRoute(builder: (_) => const MobileEditProfileScreen()),
         ),
       ),
       AccountItem(
         id: 2,
-        label: "Notifications",
-        icon: Icons.notifications_outlined,
-        color: const Color(0xFFF59E0B),
-        onPressed: () {},
+        label: "Change Password",
+        icon: Icons.lock_outline,
+        color: const Color(0xFF1EA095),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const MobileChangePasswordScreen()),
+        ),
       ),
       AccountItem(
         id: 3,
+        label: "Notifications",
+        icon: Icons.notifications_outlined,
+        color: const Color(0xFFF59E0B),
+        onPressed: () => _showComingSoon(context, 'Notifications'),
+      ),
+      AccountItem(
+        id: 4,
         label: "Location Settings",
         icon: Icons.location_on_outlined,
         color: const Color(0xFF059669),
-        onPressed: () {},
+        onPressed: () => _showComingSoon(context, 'Location Settings'),
       ),
     ];
 
-    final List<AccountItem> supportItems = [
-      AccountItem(
-        id: 4,
-        label: "Privacy Policy",
-        icon: Icons.shield_outlined,
-        color: const Color(0xFF6B7280),
-        onPressed: () {},
-      ),
+    // ── App items ─────────────────────────────────────────────────
+    final List<AccountItem> appItems = [
       AccountItem(
         id: 5,
-        label: "Help & Support",
-        icon: Icons.help_outline,
+        label: "About Fix My Town",
+        icon: Icons.info_outline,
         color: const Color(0xFF6B7280),
-        onPressed: () {},
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const MobileAboutScreen()),
+        ),
       ),
       AccountItem(
         id: 6,
+        label: "Privacy Policy",
+        icon: Icons.shield_outlined,
+        color: const Color(0xFF6B7280),
+        onPressed: () => _showComingSoon(context, 'Privacy Policy'),
+      ),
+      AccountItem(
+        id: 7,
+        label: "Help & Support",
+        icon: Icons.help_outline,
+        color: const Color(0xFF6B7280),
+        onPressed: () => _showComingSoon(context, 'Help & Support'),
+      ),
+      AccountItem(
+        id: 8,
         label: "Terms of Service",
         icon: Icons.description_outlined,
         color: const Color(0xFF6B7280),
-        onPressed: () {},
+        onPressed: () => _showComingSoon(context, 'Terms of Service'),
       ),
     ];
 
@@ -149,7 +230,7 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Profile Card ──────────────────────────────────────────
+            // ── Profile Card ──────────────────────────────────────
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
@@ -172,7 +253,7 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
                     height: 80,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: const Color(0xFF1EA095),
+                      color: primary,
                       image: (profileImage != null && profileImage.isNotEmpty)
                           ? DecorationImage(
                               image: NetworkImage(
@@ -211,102 +292,83 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
                     ),
                   ),
 
+                  // Role badge
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: _isAuthority
+                          ? const Color(0xFFEDE9FE)
+                          : const Color(0xFFE0F2F1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      _isAuthority ? 'Authority' : 'Citizen',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: _isAuthority ? const Color(0xFF7C3AED) : primary,
+                      ),
+                    ),
+                  ),
+
                   const SizedBox(height: 20),
                   const Divider(height: 1, color: Color(0xFFF1F5F9)),
                   const SizedBox(height: 20),
 
-                  // Stats row
-                  _isLoadingStats
-                      ? const SizedBox(
-                          height: 40,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              color: Color(0xFF1EA095),
-                              strokeWidth: 2,
-                            ),
-                          ),
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            _StatItem(
-                              count: '${_stats?.totalReports ?? 0}',
-                              label: 'Reports',
-                              color: const Color(0xFF1EA095),
-                            ),
-                            _Divider(),
-                            _StatItem(
-                              count: '${_stats?.resolvedReports ?? 0}',
-                              label: 'Resolved',
-                              color: const Color(0xFF059669),
-                            ),
-                            _Divider(),
-                            _StatItem(
-                              count: '${_stats?.pendingReports ?? 0}',
-                              label: 'Pending',
-                              color: const Color(0xFFD97706),
-                            ),
-                            _Divider(),
-                            _StatItem(
-                              count: '${_stats?.inprogressReports ?? 0}',
-                              label: 'In Progress',
-                              color: const Color(0xFF2563EB),
-                            ),
-                          ],
+                  // Stats
+                  if (_isLoadingStats)
+                    const SizedBox(
+                      height: 40,
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: primary,
+                          strokeWidth: 2,
                         ),
+                      ),
+                    )
+                  else if (_isAuthority)
+                    _AuthorityStatsRow(stats: _authorityStats)
+                  else
+                    _CitizenStatsRow(stats: _citizenStats),
                 ],
               ),
             ),
 
+            // ── Authority info card ───────────────────────────────
+            if (_isAuthority && _authorityStats != null) ...[
+              const SizedBox(height: 16),
+              _AuthorityInfoCard(stats: _authorityStats!),
+            ],
+
             const SizedBox(height: 24),
 
-            // ── Account Section ───────────────────────────────────────
-            const Padding(
-              padding: EdgeInsets.only(left: 4, bottom: 8),
-              child: Text(
-                'ACCOUNT',
-                style: TextStyle(
-                  color: Color(0xFF9CA3AF),
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.2,
-                ),
-              ),
-            ),
+            // ── Account Section ───────────────────────────────────
+            const _SectionLabel(label: 'ACCOUNT'),
             ListView.builder(
               itemCount: accountItems.length,
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemBuilder: (_, index) =>
-                  MyAccountItemCard(item: accountItems[index]),
+              itemBuilder: (_, i) => MyAccountItemCard(item: accountItems[i]),
             ),
 
             const SizedBox(height: 20),
 
-            // ── Support Section ───────────────────────────────────────
-            const Padding(
-              padding: EdgeInsets.only(left: 4, bottom: 8),
-              child: Text(
-                'SUPPORT',
-                style: TextStyle(
-                  color: Color(0xFF9CA3AF),
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 1.2,
-                ),
-              ),
-            ),
+            // ── App Section ───────────────────────────────────────
+            const _SectionLabel(label: 'APP'),
             ListView.builder(
-              itemCount: supportItems.length,
+              itemCount: appItems.length,
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemBuilder: (_, index) =>
-                  MyAccountItemCard(item: supportItems[index]),
+              itemBuilder: (_, i) => MyAccountItemCard(item: appItems[i]),
             ),
 
             const SizedBox(height: 24),
 
-            // ── Logout ────────────────────────────────────────────────
+            // ── Logout ────────────────────────────────────────────
             Container(
               decoration: BoxDecoration(
                 color: const Color(0xFFFEF2F2),
@@ -339,16 +401,206 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
   }
 }
 
-class _StatItem extends StatelessWidget {
-  final String count;
-  final String label;
-  final Color color;
+// ── Citizen stats row ─────────────────────────────────────────────────────────
 
+class _CitizenStatsRow extends StatelessWidget {
+  const _CitizenStatsRow({this.stats});
+  final ReportStatsModel? stats;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _StatItem(
+          count: '${stats?.totalReports ?? 0}',
+          label: 'Reports',
+          color: const Color(0xFF1EA095),
+        ),
+        _VerticalDivider(),
+        _StatItem(
+          count: '${stats?.resolvedReports ?? 0}',
+          label: 'Resolved',
+          color: const Color(0xFF059669),
+        ),
+        _VerticalDivider(),
+        _StatItem(
+          count: '${stats?.pendingReports ?? 0}',
+          label: 'Pending',
+          color: const Color(0xFFD97706),
+        ),
+        _VerticalDivider(),
+        _StatItem(
+          count: '${stats?.inprogressReports ?? 0}',
+          label: 'In Progress',
+          color: const Color(0xFF2563EB),
+        ),
+      ],
+    );
+  }
+}
+
+// ── Authority stats row ───────────────────────────────────────────────────────
+
+class _AuthorityStatsRow extends StatelessWidget {
+  const _AuthorityStatsRow({this.stats});
+  final _AuthorityStats? stats;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _StatItem(
+          count: '${stats?.assignedIssues ?? 0}',
+          label: 'Assigned',
+          color: const Color(0xFF1EA095),
+        ),
+        _VerticalDivider(),
+        _StatItem(
+          count: '${stats?.completedIssues ?? 0}',
+          label: 'Completed',
+          color: const Color(0xFF059669),
+        ),
+      ],
+    );
+  }
+}
+
+// ── Authority info card ───────────────────────────────────────────────────────
+
+class _AuthorityInfoCard extends StatelessWidget {
+  const _AuthorityInfoCard({required this.stats});
+  final _AuthorityStats stats;
+
+  @override
+  Widget build(BuildContext context) {
+    final rows = <_InfoEntry>[
+      if (stats.department != null)
+        _InfoEntry(Icons.business_outlined, 'Department', stats.department!),
+      if (stats.employeeId != null)
+        _InfoEntry(Icons.badge_outlined, 'Employee ID', stats.employeeId!),
+      if (stats.phoneNumber != null)
+        _InfoEntry(Icons.phone_outlined, 'Phone', stats.phoneNumber!),
+    ];
+
+    if (rows.isEmpty) return const SizedBox.shrink();
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: .06),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Work Details',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF0F172A),
+              letterSpacing: 0.2,
+            ),
+          ),
+          const SizedBox(height: 12),
+          ...rows.map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Row(
+                children: [
+                  Container(
+                    width: 34,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE0F2F1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      e.icon,
+                      size: 16,
+                      color: const Color(0xFF1EA095),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        e.label,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Color(0xFF9CA3AF),
+                        ),
+                      ),
+                      Text(
+                        e.value,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF0F172A),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InfoEntry {
+  final IconData icon;
+  final String label;
+  final String value;
+  const _InfoEntry(this.icon, this.label, this.value);
+}
+
+// ── Shared widgets ────────────────────────────────────────────────────────────
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel({required this.label});
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 8),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Color(0xFF9CA3AF),
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          letterSpacing: 1.2,
+        ),
+      ),
+    );
+  }
+}
+
+class _StatItem extends StatelessWidget {
   const _StatItem({
     required this.count,
     required this.label,
     required this.color,
   });
+  final String count;
+  final String label;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -372,9 +624,8 @@ class _StatItem extends StatelessWidget {
   }
 }
 
-class _Divider extends StatelessWidget {
+class _VerticalDivider extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Container(width: 1, height: 32, color: const Color(0xFFF1F5F9));
-  }
+  Widget build(BuildContext context) =>
+      Container(width: 1, height: 32, color: const Color(0xFFF1F5F9));
 }

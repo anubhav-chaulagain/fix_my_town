@@ -66,9 +66,15 @@ class UserRemoteDatasource implements IUserRemoteDatasource {
     );
 
     if (response.data["success"] == true) {
+      // Token is at top-level response, not inside data
+      final token = response.data["token"] as String?;
+      if (token != null) {
+        await _tokenService.saveToken(token);
+      }
+
       final data = response.data["data"] as Map<String, dynamic>;
       final user = UserApiModel.fromJson(data);
-      // info: Save user session
+
       await _userSessionService.saveUserSession(
         email: user.email,
         fullname: user.fullName!,

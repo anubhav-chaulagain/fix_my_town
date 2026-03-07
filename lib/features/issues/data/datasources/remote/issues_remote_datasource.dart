@@ -7,6 +7,7 @@ import 'package:fix_my_town/core/api/api_client.dart';
 import 'package:fix_my_town/core/api/api_endpoints.dart';
 import 'package:fix_my_town/features/issues/data/datasources/issues_datasource.dart';
 import 'package:fix_my_town/features/issues/data/models/issues_api_model.dart';
+import 'package:http_parser/http_parser.dart';
 
 final issuesRemoteDatasourceProvider = Provider<IIssuesRemoteDataSource>((ref) {
   return IssuesRemoteDatasource(apiClient: ref.read(apiClientProvider));
@@ -30,14 +31,20 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
       if (issue.description != null) 'description': issue.description,
       if (issue.priority != null) 'priority': issue.priority,
       if (issueImages.isNotEmpty)
-        'issueImages': issueImages
-            .map(
-              (file) => MultipartFile.fromFileSync(
-                file.path,
-                filename: file.path.split('/').last,
-              ),
-            )
-            .toList(),
+        'issueImages': issueImages.map((file) {
+          final ext = file.path.split('.').last.toLowerCase();
+          final mimeType = ext == 'png'
+              ? 'image/png'
+              : ext == 'gif'
+              ? 'image/gif'
+              : 'image/jpeg'; // default to jpeg for jpg/jpeg/heic etc.
+
+          return MultipartFile.fromFileSync(
+            file.path,
+            filename: file.path.split('/').last,
+            contentType: MediaType.parse(mimeType),
+          );
+        }).toList(),
     });
 
     final response = await _apiClient.uploadFile(
@@ -75,14 +82,20 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
       if (issue.description != null) 'description': issue.description,
       if (issue.priority != null) 'priority': issue.priority,
       if (issueImages.isNotEmpty)
-        'issueImages': issueImages
-            .map(
-              (file) => MultipartFile.fromFileSync(
-                file.path,
-                filename: file.path.split('/').last,
-              ),
-            )
-            .toList(),
+        'issueImages': issueImages.map((file) {
+          final ext = file.path.split('.').last.toLowerCase();
+          final mimeType = ext == 'png'
+              ? 'image/png'
+              : ext == 'gif'
+              ? 'image/gif'
+              : 'image/jpeg'; // default to jpeg for jpg/jpeg/heic etc.
+
+          return MultipartFile.fromFileSync(
+            file.path,
+            filename: file.path.split('/').last,
+            contentType: MediaType.parse(mimeType),
+          );
+        }).toList(),
     });
 
     final response = await _apiClient.uploadFile(

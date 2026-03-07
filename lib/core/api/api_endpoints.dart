@@ -32,6 +32,10 @@ class ApiEndpoints {
   // issues ko
   static const String issues = "/api/issues";
   static const String issueUploadsPath = '/public/issue_images';
+  // api_endpoints.dart - add these
+  static const String reportStats = "/api/auth/report-stats";
+  static const String myRecentIssues = "/api/issues/my-recent";
+  static const String myIssues = "/api/issues/my-issues";
 
   static String getIssueImageUrl(String? filename) {
     if (filename == null || filename.isEmpty) return '';

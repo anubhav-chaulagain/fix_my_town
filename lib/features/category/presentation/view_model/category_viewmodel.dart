@@ -6,6 +6,10 @@ import 'package:fix_my_town/features/category/domain/usecases/update_category_us
 import 'package:fix_my_town/features/category/presentation/state/category_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// provider
+final categoryViewmodelProvider =
+    NotifierProvider<CategoryViewmodel, CategoryState>(CategoryViewmodel.new);
+
 class CategoryViewmodel extends Notifier<CategoryState> {
   late final GetAllCategoriesUsecase _getAllCategoriesUsecase;
   late final GetCategoryByIdUsecase _getCategoryByIdUsecase;

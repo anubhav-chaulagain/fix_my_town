@@ -26,10 +26,8 @@ class ApiClient {
       ),
     );
 
-    // Info: Add intercept
     _dio.interceptors.add(_AuthInterceptor());
 
-    // Info: Auto retry on network failures
     _dio.interceptors.add(
       RetryInterceptor(
         dio: _dio,
@@ -40,7 +38,6 @@ class ApiClient {
           Duration(seconds: 3),
         ],
         retryEvaluator: (error, attempt) {
-          // info: retry on connection error and timeout, not on 404, 4xx/5xx
           return error.type == DioExceptionType.connectionTimeout ||
               error.type == DioExceptionType.sendTimeout ||
               error.type == DioExceptionType.receiveTimeout ||
@@ -49,7 +46,6 @@ class ApiClient {
       ),
     );
 
-    // Note: only add logger in debug mode
     if (kDebugMode) {
       _dio.interceptors.add(
         PrettyDioLogger(
@@ -64,9 +60,13 @@ class ApiClient {
     }
   }
 
+  /// Protected constructor for subclassing in tests.
+  /// Do not use directly in production code.
+  @protected
+  ApiClient.forTesting();
+
   Dio get dio => _dio;
 
-  // Info: GET request
   Future<Response> get(
     String path, {
     Map<String, dynamic>? queryParameters,
@@ -75,7 +75,6 @@ class ApiClient {
     return _dio.get(path, queryParameters: queryParameters, options: option);
   }
 
-  // Info: POST request
   Future<Response> post(
     String path, {
     dynamic data,
@@ -90,7 +89,6 @@ class ApiClient {
     );
   }
 
-  // Info: PUT request
   Future<Response> put(
     String path, {
     dynamic data,
@@ -105,7 +103,6 @@ class ApiClient {
     );
   }
 
-  // Info: PATCH request
   Future<Response> patch(
     String path, {
     dynamic data,
@@ -120,7 +117,6 @@ class ApiClient {
     );
   }
 
-  // Info: DELETE request
   Future<Response> delete(
     String path, {
     dynamic data,
@@ -135,23 +131,36 @@ class ApiClient {
     );
   }
 
-  // Info: multipart request for file uploads
   Future<Response> uploadFile(
     String path, {
     required FormData formData,
     Options? options,
     ProgressCallback? onSendProgress,
   }) async {
-    return _dio.put(
+    return _dio.post(
       path,
       data: formData,
       options: options,
       onSendProgress: onSendProgress,
     );
   }
+
+  Future<Response> putFile(
+    String path, {
+    required FormData formData,
+    Options? options,
+    ProgressCallback? onSendProgress,
+  }) async {
+    final putOptions = (options ?? Options()).copyWith(method: 'PUT');
+    return _dio.request(
+      path,
+      data: formData,
+      options: putOptions,
+      onSendProgress: onSendProgress,
+    );
+  }
 }
 
-// Info: Auth interceptor to add JWT token to request
 class _AuthInterceptor extends Interceptor {
   final _storage = const FlutterSecureStorage();
   static const String _tokenKey = "auth_token";
@@ -161,7 +170,6 @@ class _AuthInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    // info: skip auth for public endpoints
     final publicEndPoints = [ApiEndpoints.userLogin, ApiEndpoints.userRegister];
 
     final isPublicGet =
@@ -184,11 +192,8 @@ class _AuthInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    // Info: Handle 401 unauthorized - token expire
     if (err.response?.statusCode == 401) {
-      // info: Clear token and redirect to login
       _storage.delete(key: _tokenKey);
-      // info: You can add navigation logic here or use a callback
     }
     handler.next(err);
   }

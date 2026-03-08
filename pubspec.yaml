@@ -92,6 +92,7 @@ dependencies:
   url_launcher: ^6.3.2
   sensors_plus: ^7.0.0
   light_sensor: ^3.0.2
+  test_cov_console: ^0.2.2
 
 dev_dependencies:
   flutter_test:

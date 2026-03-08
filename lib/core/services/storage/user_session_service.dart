@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// Shared Preferences Provider
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError();
 });
@@ -11,18 +11,19 @@ final userSessionServiceProvider = Provider<UserSessionService>((ref) {
 });
 
 class UserSessionService {
-  final SharedPreferences _prefs;
+  late final SharedPreferences _prefs;
 
   UserSessionService({required SharedPreferences prefs}) : _prefs = prefs;
 
-  // keys for storing data
+  @protected
+  UserSessionService.forTesting();
+
   static const String _keyIsLoggedIn = 'is_logged_in';
   static const String _keyUserEmail = 'user_email';
   static const String _keyUserFullname = 'user_fullname';
   static const String _keyRole = 'user_role';
   static const String _keyProfileImage = 'user_profile_image';
 
-  // Store user session data
   Future<void> saveUserSession({
     required String email,
     String? role,
@@ -38,7 +39,6 @@ class UserSessionService {
     }
   }
 
-  // Clear user session data
   Future<void> clearUserSession() async {
     await _prefs.remove(_keyIsLoggedIn);
     await _prefs.remove(_keyUserEmail);

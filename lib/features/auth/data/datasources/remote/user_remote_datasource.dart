@@ -43,7 +43,7 @@ class UserRemoteDatasource implements IUserRemoteDatasource {
     });
     // Get token from token service
     final token = await _tokenService.getToken();
-    final response = await _apiClient.uploadFile(
+    final response = await _apiClient.putFile(
       ApiEndpoints.userUploadPhoto,
       formData: formData,
       options: Options(headers: {'Authorization': 'Bearer $token'}),
@@ -54,7 +54,6 @@ class UserRemoteDatasource implements IUserRemoteDatasource {
 
   @override
   Future<UserApiModel?> getCurrentUser(String userId) {
-    // TODO: implement getCurrentUser
     throw UnimplementedError();
   }
 
@@ -88,7 +87,6 @@ class UserRemoteDatasource implements IUserRemoteDatasource {
 
   @override
   Future<bool> logout() {
-    // TODO: implement logout
     throw UnimplementedError();
   }
 

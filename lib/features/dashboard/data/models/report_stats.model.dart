@@ -1,4 +1,3 @@
-// report_stats_model.dart
 class ReportStatsModel {
   final int totalReports;
   final int pendingReports;

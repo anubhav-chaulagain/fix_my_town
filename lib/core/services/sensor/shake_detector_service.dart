@@ -10,8 +10,8 @@ final shakeDetectorServiceProvider = Provider<ShakeDetectorService>((ref) {
 });
 
 class ShakeDetectorService {
-  static const double _shakeThreshold = 20.0; // m/s² — sensitivity
-  static const int _shakeCooldown = 2000; // ms — prevent multiple triggers
+  static const double _shakeThreshold = 20.0;
+  static const int _shakeCooldown = 2000;
 
   final StreamController<void> _shakeController =
       StreamController<void>.broadcast();

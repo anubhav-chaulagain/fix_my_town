@@ -1,4 +1,3 @@
-// map_picker_widget.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:geocoding/geocoding.dart';
@@ -59,9 +58,7 @@ class _MapPickerWidgetState extends State<MapPickerWidget> {
           address = parts.join(', ');
         }
       }
-    } catch (_) {
-      // fallback to coordinates string
-    }
+    } catch (_) {}
 
     setState(() => _isLoadingAddress = false);
     widget.onLocationSelected(point.latitude, point.longitude, address);

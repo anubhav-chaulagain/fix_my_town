@@ -221,7 +221,6 @@ class _MobileIssueDetailScreenState
 
     return CustomScrollView(
       slivers: [
-        // ── App Bar ───────────────────────────────────────────────
         SliverAppBar(
           expandedHeight: hasImages ? 280 : 120,
           pinned: true,
@@ -293,7 +292,6 @@ class _MobileIssueDetailScreenState
           ),
         ),
 
-        // ── Content ───────────────────────────────────────────────
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16, 20, 16, 100),
@@ -565,8 +563,6 @@ class _MobileIssueDetailScreenState
   }
 }
 
-// ── Extended model ────────────────────────────────────────────────────────────
-
 extension _IssueDetailModel on IssuesApiModel {
   static IssuesApiModel fromDetailJson(Map<String, dynamic> json) {
     String? extractId(dynamic val) =>
@@ -646,8 +642,6 @@ class _DetailIssueApiModel extends IssuesApiModel {
   });
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-
 String _formatDate(String raw) {
   if (raw.isEmpty) return '—';
   try {
@@ -723,8 +717,6 @@ String _formatStatus(String s) {
       );
   }
 }
-
-// ── Widgets ───────────────────────────────────────────────────────────────────
 
 class _StatusBadge extends StatelessWidget {
   const _StatusBadge({required this.status});

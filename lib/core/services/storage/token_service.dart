@@ -6,7 +6,7 @@ final tokenServiceProvider = Provider<TokenService>((ref) {
 });
 
 class TokenService {
-  static const String _tokenKey = 'auth_token'; // matches _AuthInterceptor
+  static const String _tokenKey = 'auth_token';
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   Future<void> saveToken(String token) async {

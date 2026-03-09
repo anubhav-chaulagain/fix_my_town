@@ -133,7 +133,6 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
         }
       }
     } catch (_) {
-      // stats are non-critical
     } finally {
       setState(() => _isLoadingStats = false);
     }
@@ -230,12 +229,11 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
 
     return SafeArea(
       child: SingleChildScrollView(
-        controller: _gyroService.scrollController, // 👈 gyroscope attached
+        controller: _gyroService.scrollController,
         padding: const EdgeInsets.fromLTRB(16, 20, 16, 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ── Profile Card ──────────────────────────────────────
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
@@ -343,7 +341,6 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
               ),
             ),
 
-            // ── Authority info card ───────────────────────────────
             if (_isAuthority && _authorityStats != null) ...[
               const SizedBox(height: 16),
               _AuthorityInfoCard(stats: _authorityStats!),
@@ -351,7 +348,6 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
 
             const SizedBox(height: 24),
 
-            // ── Account Section ───────────────────────────────────
             const _SectionLabel(label: 'ACCOUNT'),
             ListView.builder(
               itemCount: accountItems.length,
@@ -362,7 +358,6 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
 
             const SizedBox(height: 20),
 
-            // ── App Section ───────────────────────────────────────
             const _SectionLabel(label: 'APP'),
             ListView.builder(
               itemCount: appItems.length,
@@ -373,7 +368,6 @@ class _MobileProfileScreenState extends ConsumerState<MobileProfileScreen> {
 
             const SizedBox(height: 24),
 
-            // ── Logout ────────────────────────────────────────────
             Container(
               decoration: BoxDecoration(
                 color: const Color(0xFFFEF2F2),

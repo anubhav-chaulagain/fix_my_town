@@ -1,4 +1,3 @@
-// mobile_report_issue_screen.dart
 import 'dart:io';
 import 'package:fix_my_town/app/routes/app_routes.dart';
 import 'package:fix_my_town/features/dashboard/presentation/widgets/map_picker_widget.dart';
@@ -61,8 +60,6 @@ class _MobileReportIssueScreenState
     _descriptionController.dispose();
     super.dispose();
   }
-
-  // ── Image Handling ────────────────────────────────────────────────────────
 
   Future<bool> _requestPermission(Permission permission) async {
     final status = await permission.status;
@@ -186,8 +183,6 @@ class _MobileReportIssueScreenState
     setState(() => _selectedImages.removeAt(index));
   }
 
-  // ── Submit ────────────────────────────────────────────────────────────────
-
   Future<void> _handleSubmit() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -244,8 +239,6 @@ class _MobileReportIssueScreenState
     );
   }
 
-  // ── Build ─────────────────────────────────────────────────────────────────
-
   @override
   Widget build(BuildContext context) {
     final issuesState = ref.watch(issuesViewModelProvider);
@@ -280,7 +273,6 @@ class _MobileReportIssueScreenState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── Info Banner ───────────────────────────────────────────
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
@@ -313,7 +305,6 @@ class _MobileReportIssueScreenState
 
               const SizedBox(height: 24),
 
-              // ── Title ─────────────────────────────────────────────────
               const _SectionLabel(label: 'Title'),
               const SizedBox(height: 8),
               _InputField(
@@ -325,7 +316,6 @@ class _MobileReportIssueScreenState
 
               const SizedBox(height: 20),
 
-              // ── Category & Priority ───────────────────────────────────
               Row(
                 children: [
                   Expanded(
@@ -366,7 +356,6 @@ class _MobileReportIssueScreenState
 
               const SizedBox(height: 20),
 
-              // ── Location ──────────────────────────────────────────────
               const _SectionLabel(label: 'Location'),
               const SizedBox(height: 8),
               Row(
@@ -464,7 +453,6 @@ class _MobileReportIssueScreenState
 
               const SizedBox(height: 20),
 
-              // ── Description ───────────────────────────────────────────
               const _SectionLabel(label: 'Description'),
               const SizedBox(height: 8),
               _InputField(
@@ -478,7 +466,6 @@ class _MobileReportIssueScreenState
 
               const SizedBox(height: 20),
 
-              // ── Images ────────────────────────────────────────────────
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -586,7 +573,6 @@ class _MobileReportIssueScreenState
 
               const SizedBox(height: 32),
 
-              // ── Submit Button ─────────────────────────────────────────
               SizedBox(
                 width: double.infinity,
                 height: 52,
@@ -630,8 +616,6 @@ class _MobileReportIssueScreenState
     );
   }
 }
-
-// ── Reusable Widgets ──────────────────────────────────────────────────────────
 
 class _SectionLabel extends StatelessWidget {
   final String label;

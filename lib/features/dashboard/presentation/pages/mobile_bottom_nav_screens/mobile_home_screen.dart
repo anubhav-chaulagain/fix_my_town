@@ -1,4 +1,3 @@
-// mobile_home_screen.dart
 import 'package:fix_my_town/app/routes/app_routes.dart';
 import 'package:fix_my_town/core/api/api_client.dart';
 import 'package:fix_my_town/core/api/api_endpoints.dart';
@@ -27,7 +26,7 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
   bool _isLoading = true;
   String? _error;
 
-  // Pagination for authority worklist
+  // Pagination
   int _currentPage = 1;
   int _totalPages = 1;
   bool _isLoadingMore = false;
@@ -135,7 +134,7 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
         });
       }
     } catch (_) {
-      setState(() => _currentPage--); // rollback on error
+      setState(() => _currentPage--);
     } finally {
       setState(() => _isLoadingMore = false);
     }
@@ -234,7 +233,6 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
                 ),
               ),
 
-              // ── Categories (citizen only) ─────────────────────────────
               if (!_isAuthority) ...[
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -286,7 +284,6 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
                 ),
               ],
 
-              // ── Section header ────────────────────────────────────────
               Padding(
                 padding: EdgeInsets.only(
                   left: 20,
@@ -312,7 +309,6 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
                 ),
               ),
 
-              // ── Body ─────────────────────────────────────────────────
               if (_isLoading)
                 const Center(
                   child: Padding(
@@ -351,7 +347,6 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
                   ),
                 )
               else if (_isAuthority) ...[
-                // ── Authority worklist ──────────────────────────────
                 if (_assignedIssues.isEmpty)
                   Center(
                     child: Padding(
@@ -420,7 +415,6 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
                     ),
                 ],
               ] else ...[
-                // ── Citizen recent activity ─────────────────────────
                 if (_recentIssues.isEmpty)
                   Center(
                     child: Padding(
@@ -459,8 +453,6 @@ class _MobileHomeScreenState extends ConsumerState<MobileHomeScreen> {
     );
   }
 }
-
-// ── Small badge showing pending/in-progress count ────────────────────────────
 
 class _WorklistSummaryBadge extends StatelessWidget {
   const _WorklistSummaryBadge({required this.issues});

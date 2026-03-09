@@ -119,7 +119,6 @@ class _TabletAllReportsScreenState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Header ─────────────────────────────────────
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24, 24, 24, 4),
                     child: Row(
@@ -167,7 +166,6 @@ class _TabletAllReportsScreenState
 
                   const SizedBox(height: 16),
 
-                  // ── Filters side by side on tablet ─────────────
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Row(
@@ -246,7 +244,6 @@ class _TabletAllReportsScreenState
 
                   const SizedBox(height: 24),
 
-                  // ── Body ───────────────────────────────────────
                   if (isLoading)
                     const Center(
                       child: Padding(

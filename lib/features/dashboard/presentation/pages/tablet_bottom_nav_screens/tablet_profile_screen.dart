@@ -218,7 +218,6 @@ class _TabletProfileScreenState extends ConsumerState<TabletProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ── Profile Card ──────────────────────────────
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(

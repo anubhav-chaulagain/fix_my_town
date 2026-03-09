@@ -1,4 +1,3 @@
-// mobile_my_reports_screen.dart
 import 'package:fix_my_town/app/routes/app_routes.dart';
 import 'package:fix_my_town/core/api/api_client.dart';
 import 'package:fix_my_town/core/api/api_endpoints.dart';
@@ -85,7 +84,6 @@ class _MobileMyReportsScreenState extends ConsumerState<MobileMyReportsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ── Header ───────────────────────────────────────────────
               const Padding(
                 padding: EdgeInsets.fromLTRB(20, 20, 20, 16),
                 child: Text(
@@ -99,7 +97,6 @@ class _MobileMyReportsScreenState extends ConsumerState<MobileMyReportsScreen> {
                 ),
               ),
 
-              // ── Stats Grid ────────────────────────────────────────────
               if (_isLoading)
                 const Center(
                   child: Padding(
@@ -140,7 +137,6 @@ class _MobileMyReportsScreenState extends ConsumerState<MobileMyReportsScreen> {
                   ),
                 ),
 
-                // ── Issues List ─────────────────────────────────────────
                 const Padding(
                   padding: EdgeInsets.only(left: 20, top: 20, bottom: 12),
                   child: Text(

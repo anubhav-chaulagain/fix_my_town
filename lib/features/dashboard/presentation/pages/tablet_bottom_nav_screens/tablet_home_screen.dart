@@ -127,7 +127,6 @@ class _TabletHomeScreenState extends ConsumerState<TabletHomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Header ───────────────────────────────────────
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24, 24, 24, 4),
                     child: Text(
@@ -153,7 +152,6 @@ class _TabletHomeScreenState extends ConsumerState<TabletHomeScreen> {
                     ),
                   ),
 
-                  // ── Categories (citizen only) ─────────────────────
                   if (!_isAuthority)
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -189,7 +187,6 @@ class _TabletHomeScreenState extends ConsumerState<TabletHomeScreen> {
                       ),
                     ),
 
-                  // ── Section header ────────────────────────────────
                   Padding(
                     padding: EdgeInsets.only(
                       left: 24,
@@ -208,7 +205,6 @@ class _TabletHomeScreenState extends ConsumerState<TabletHomeScreen> {
                     ),
                   ),
 
-                  // ── Body ─────────────────────────────────────────
                   if (isLoading)
                     const Center(
                       child: Padding(

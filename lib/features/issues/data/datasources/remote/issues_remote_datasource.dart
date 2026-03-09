@@ -1,4 +1,3 @@
-// issues_remote_datasource.dart
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -19,7 +18,6 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
   IssuesRemoteDatasource({required ApiClient apiClient})
     : _apiClient = apiClient;
 
-  // POST /api/issues (multipart - supports image uploads)
   @override
   Future<bool> createIssue(IssuesApiModel issue, List<File> issueImages) async {
     final formData = FormData.fromMap({
@@ -37,8 +35,7 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
               ? 'image/png'
               : ext == 'gif'
               ? 'image/gif'
-              : 'image/jpeg'; // default to jpeg for jpg/jpeg/heic etc.
-
+              : 'image/jpeg';
           return MultipartFile.fromFileSync(
             file.path,
             filename: file.path.split('/').last,
@@ -54,7 +51,6 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
     return response.statusCode == 201;
   }
 
-  // GET /api/issues
   @override
   Future<List<IssuesApiModel>> getAllIssues() async {
     final response = await _apiClient.get(ApiEndpoints.issues);
@@ -62,7 +58,6 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
     return data.map((json) => IssuesApiModel.fromJson(json)).toList();
   }
 
-  // GET /api/issues/:id
   @override
   Future<IssuesApiModel?> getIssueById(String issueId) async {
     final response = await _apiClient.get('${ApiEndpoints.issues}/$issueId');
@@ -70,7 +65,6 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
     return IssuesApiModel.fromJson(data);
   }
 
-  // PUT /api/issues/:id (multipart - supports image uploads)
   @override
   Future<bool> updateIssue(IssuesApiModel issue, List<File> issueImages) async {
     final formData = FormData.fromMap({
@@ -88,7 +82,7 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
               ? 'image/png'
               : ext == 'gif'
               ? 'image/gif'
-              : 'image/jpeg'; // default to jpeg for jpg/jpeg/heic etc.
+              : 'image/jpeg';
 
           return MultipartFile.fromFileSync(
             file.path,
@@ -106,14 +100,12 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
     return response.statusCode == 200;
   }
 
-  // DELETE /api/issues/:id
   @override
   Future<bool> deleteIssue(String issueId) async {
     final response = await _apiClient.delete('${ApiEndpoints.issues}/$issueId');
     return response.statusCode == 200;
   }
 
-  // GET /api/issues?status=xxx
   @override
   Future<List<IssuesApiModel>> getIssuesByStatus(String status) async {
     final response = await _apiClient.get(
@@ -124,7 +116,6 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
     return data.map((json) => IssuesApiModel.fromJson(json)).toList();
   }
 
-  // GET /api/issues?category=xxx
   @override
   Future<List<IssuesApiModel>> getIssuesByCategory(String category) async {
     final response = await _apiClient.get(
@@ -135,7 +126,6 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
     return data.map((json) => IssuesApiModel.fromJson(json)).toList();
   }
 
-  // GET /api/issues/my-issues
   @override
   Future<List<IssuesApiModel>> getIssuesByReportedBy(String reportedBy) async {
     final response = await _apiClient.get('${ApiEndpoints.issues}/my-issues');
@@ -143,7 +133,6 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
     return data.map((json) => IssuesApiModel.fromJson(json)).toList();
   }
 
-  // GET /api/issues/my-assigned
   @override
   Future<List<IssuesApiModel>> getMyAssignedIssues() async {
     final response = await _apiClient.get('${ApiEndpoints.issues}/my-assigned');
@@ -151,7 +140,6 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
     return data.map((json) => IssuesApiModel.fromJson(json)).toList();
   }
 
-  // GET /api/issues/my-recent
   @override
   Future<List<IssuesApiModel>> getMyRecentIssues() async {
     final response = await _apiClient.get('${ApiEndpoints.issues}/my-recent');
@@ -159,7 +147,6 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
     return data.map((json) => IssuesApiModel.fromJson(json)).toList();
   }
 
-  // GET /api/issues/unassigned
   @override
   Future<List<IssuesApiModel>> getUnassignedIssues() async {
     final response = await _apiClient.get('${ApiEndpoints.issues}/unassigned');
@@ -167,7 +154,6 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
     return data.map((json) => IssuesApiModel.fromJson(json)).toList();
   }
 
-  // PATCH /api/issues/:id/status
   @override
   Future<bool> updateIssueStatus(String issueId, String status) async {
     final response = await _apiClient.put(
@@ -177,7 +163,6 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
     return response.statusCode == 200;
   }
 
-  // PATCH /api/issues/:id/assign
   @override
   Future<bool> assignIssue(String issueId, String assignedTo) async {
     final response = await _apiClient.put(
@@ -187,7 +172,6 @@ class IssuesRemoteDatasource implements IIssuesRemoteDataSource {
     return response.statusCode == 200;
   }
 
-  // PATCH /api/issues/:id/resolve
   @override
   Future<bool> resolveIssue(String issueId, String remarks) async {
     final response = await _apiClient.put(

@@ -74,7 +74,6 @@ class _TabletMyReportsScreenState extends ConsumerState<TabletMyReportsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── Header ───────────────────────────────────────
                   const Padding(
                     padding: EdgeInsets.fromLTRB(24, 24, 24, 20),
                     child: Text(
@@ -96,7 +95,6 @@ class _TabletMyReportsScreenState extends ConsumerState<TabletMyReportsScreen> {
                       ),
                     )
                   else ...[
-                    // ── Stats — 4 columns on tablet ───────────────
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: GridView.builder(
@@ -115,7 +113,6 @@ class _TabletMyReportsScreenState extends ConsumerState<TabletMyReportsScreen> {
                       ),
                     ),
 
-                    // ── Issues section header ─────────────────────
                     const Padding(
                       padding: EdgeInsets.only(left: 24, top: 28, bottom: 16),
                       child: Text(
@@ -178,7 +175,6 @@ class _TabletMyReportsScreenState extends ConsumerState<TabletMyReportsScreen> {
                         ),
                       )
                     else
-                      // ── 2-column issue grid ───────────────────
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: GridView.builder(

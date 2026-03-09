@@ -23,7 +23,6 @@ class _MobileEditProfileScreenState
     extends ConsumerState<MobileEditProfileScreen> {
   final _editProfileKey = GlobalKey<FormState>();
 
-  // Initialize with empty strings immediately
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController currPassController = TextEditingController();
@@ -228,7 +227,6 @@ class _MobileEditProfileScreenState
     }
   }
 
-  // code for dialogBox : showDialog for menu
   Future<void> _pickMedia() async {
     showModalBottomSheet(
       context: context,

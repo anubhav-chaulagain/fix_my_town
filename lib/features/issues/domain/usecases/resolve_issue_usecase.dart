@@ -1,4 +1,3 @@
-// resolve_issue_usecase.dart
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fix_my_town/core/usecases/app_usecase.dart';

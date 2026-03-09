@@ -29,7 +29,6 @@ class _MobileDashboardScreenState extends ConsumerState<MobileDashboardScreen> {
   int _selectedIndex = 0;
   bool _isAuthority = false;
 
-  // Counters per index — incrementing forces screen recreation via ValueKey
   final Map<int, int> _refreshCounters = {0: 0, 1: 0, 2: 0, 3: 0};
 
   @override
@@ -48,10 +47,8 @@ class _MobileDashboardScreenState extends ConsumerState<MobileDashboardScreen> {
     _shakeSubscription = shakeService.onShake.listen((_) {
       if (mounted) {
         if (_isAuthority) {
-          // Authority → shake to logout
           _showLogoutDialog(context, ref);
         } else {
-          // Citizen → shake to report issue
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const MobileReportIssueScreen()),
@@ -128,7 +125,6 @@ class _MobileDashboardScreenState extends ConsumerState<MobileDashboardScreen> {
     return GestureDetector(
       onTap: () {
         if (_selectedIndex == index) {
-          // Re-tapping current tab → refresh it
           setState(() {
             _refreshCounters[index] = (_refreshCounters[index] ?? 0) + 1;
           });
@@ -170,7 +166,6 @@ class _MobileDashboardScreenState extends ConsumerState<MobileDashboardScreen> {
     return Scaffold(
       body: IndexedStack(index: _selectedIndex, children: _screens),
 
-      // ── Bottom Nav ──────────────────────────────────────────────
       bottomNavigationBar: BottomAppBar(
         color: Colors.white,
         elevation: 12,
@@ -199,7 +194,6 @@ class _MobileDashboardScreenState extends ConsumerState<MobileDashboardScreen> {
               ),
       ),
 
-      // ── FAB (citizen only) ──────────────────────────────────────
       floatingActionButton: _isAuthority
           ? null
           : PhysicalModel(

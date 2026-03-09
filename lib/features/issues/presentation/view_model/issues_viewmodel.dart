@@ -1,4 +1,3 @@
-// issues_view_model.dart
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fix_my_town/features/issues/domain/entities/issues_entity.dart';

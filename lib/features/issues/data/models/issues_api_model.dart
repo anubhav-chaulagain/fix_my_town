@@ -1,4 +1,3 @@
-// issues_api_model.dart
 import 'package:fix_my_town/features/issues/domain/entities/issues_entity.dart';
 
 class IssuesApiModel {

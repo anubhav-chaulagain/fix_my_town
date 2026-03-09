@@ -1,4 +1,3 @@
-// issues_repository.dart
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
@@ -28,8 +27,6 @@ class IssuesRepository implements IIssueRepository {
   }) : _localDataSource = issuesLocalDatasource,
        _remoteDataSource = issuesRemoteDatasource;
 
-  // ── CREATE ───────────────────────────────────────────────────────────────
-
   @override
   Future<Either<Failure, bool>> createIssue(
     IssuesEntity issue,
@@ -44,8 +41,6 @@ class IssuesRepository implements IIssueRepository {
       return Left(ApiFailure(message: e.toString()));
     }
   }
-
-  // ── READ ─────────────────────────────────────────────────────────────────
 
   @override
   Future<Either<Failure, List<IssuesEntity>>> getAllIssues() async {
@@ -103,8 +98,6 @@ class IssuesRepository implements IIssueRepository {
     }
   }
 
-  // ── UPDATE ───────────────────────────────────────────────────────────────
-
   @override
   Future<Either<Failure, bool>> updateIssue(
     IssuesEntity issue,
@@ -158,8 +151,6 @@ class IssuesRepository implements IIssueRepository {
       return Left(ApiFailure(message: e.toString()));
     }
   }
-
-  // ── DELETE ───────────────────────────────────────────────────────────────
 
   @override
   Future<Either<Failure, bool>> deleteIssue(String issueId) async {
